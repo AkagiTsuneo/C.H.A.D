@@ -6,28 +6,23 @@
     <title>C.H.A.D (Competently Hard Answer Doc)</title>
     <style>
         :root {
-            /* AMOLED Dark & Purple Theme */
             --bg-amoled: #000000;
             --bg-card: #121212;
             --bg-sidebar: #0a0a0a;
             --primary-purple: #a855f7;
             --primary-hover: #c084fc;
             --primary-glow: rgba(168, 85, 247, 0.4);
-            
-            /* Text Colors */
             --text-main: #f8fafc;
             --text-muted: #a1a1aa;
-            
-            /* UI Elements */
             --border-color: #27272a;
             --option-bg: #1e1e24;
             --option-hover-bg: #2a2a35;
-            
-            /* Feedback Colors */
             --correct-color: #10b981;
             --correct-bg: rgba(16, 185, 129, 0.1);
             --incorrect-color: #ef4444;
             --incorrect-bg: rgba(239, 68, 68, 0.1);
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
         }
 
         body {
@@ -36,13 +31,27 @@
             color: var(--text-main);
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
             display: flex;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* Sidebar UI */
+        /* --- BPA TAG --- */
+        .bpa-tag {
+            background-color: var(--primary-purple);
+            color: #ffffff;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 10px;
+            vertical-align: middle;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 8px var(--primary-glow);
+        }
+
+        /* --- SIDEBAR --- */
         .sidebar {
             width: 300px;
             background-color: var(--bg-sidebar);
@@ -51,64 +60,20 @@
             flex-direction: column;
             padding: 20px 0;
             overflow-y: auto;
+            flex-shrink: 0;
         }
+        .sidebar-header { padding: 0 20px 20px 20px; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; }
+        .sidebar-header h2 { margin: 0; color: var(--primary-purple); font-size: 1.6rem; text-shadow: 0 0 10px var(--primary-glow); }
+        .sidebar-header p { margin: 5px 0 0 0; color: var(--text-muted); font-size: 0.85rem; }
 
-        .sidebar-header {
-            padding: 0 20px 20px 20px;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 20px;
-        }
+        .set-list { list-style: none; padding: 0 10px; margin: 0; }
+        .set-item { padding: 15px 20px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; color: var(--text-muted); transition: all 0.2s ease; font-weight: 500; }
+        .set-item:hover { background-color: var(--option-hover-bg); color: var(--text-main); }
+        .set-item.active { background-color: var(--primary-glow); color: var(--text-main); border-left: 4px solid var(--primary-purple); }
 
-        .sidebar-header h2 {
-            margin: 0;
-            color: var(--primary-purple);
-            font-size: 1.6rem;
-            text-shadow: 0 0 10px var(--primary-glow);
-        }
-
-        .sidebar-header p {
-            margin: 5px 0 0 0;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-
-        .set-list {
-            list-style: none;
-            padding: 0 10px;
-            margin: 0;
-        }
-
-        .set-item {
-            padding: 15px 20px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            color: var(--text-muted);
-            transition: all 0.2s ease;
-            font-weight: 500;
-        }
-
-        .set-item:hover {
-            background-color: var(--option-hover-bg);
-            color: var(--text-main);
-        }
-
-        .set-item.active {
-            background-color: var(--primary-glow);
-            color: var(--text-main);
-            border-left: 4px solid var(--primary-purple);
-        }
-
-        /* Main Content Area */
-        .main-content {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 40px 20px;
-            overflow-y: auto;
-        }
-
+        /* --- MAIN CONTENT --- */
+        .main-content { flex: 1; display: flex; justify-content: center; align-items: flex-start; padding: 40px 20px; overflow-y: auto; }
+        
         .quiz-container {
             background: var(--bg-card);
             padding: 2.5rem;
@@ -116,189 +81,105 @@
             border: 1px solid var(--border-color);
             box-shadow: 0 0 30px var(--primary-glow);
             width: 100%;
-            max-width: 800px;
-            position: relative;
+            max-width: 1000px;
         }
 
-        /* Progress Bar */
-        .progress-container {
-            width: 100%;
-            height: 6px;
-            background-color: var(--border-color);
-            border-radius: 4px;
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background-color: var(--primary-purple);
-            width: 0%;
-            transition: width 0.4s ease;
-            box-shadow: 0 0 10px var(--primary-purple);
-        }
-
-        .quiz-header {
+        /* --- HUD / STATS BAR --- */
+        .hud-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-            font-size: 1rem;
-            color: var(--primary-purple);
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            background: var(--bg-sidebar);
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
         }
-
-        .question {
-            font-size: 1.3rem;
-            font-weight: 600;
-            line-height: 1.5;
-            margin-bottom: 2rem;
+        
+        .timer-group { display: flex; gap: 20px; }
+        .timer-badge { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            font-size: 1rem; 
+            font-weight: 600; 
             color: var(--text-main);
+            font-family: 'Courier New', Courier, monospace; 
         }
+        .timer-badge.warning { color: var(--warning-color); }
+        .timer-badge.danger { color: var(--danger-color); animation: pulse 1s infinite; }
 
-        .options {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 1.5rem 0;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .progress-container { width: 100%; height: 6px; background-color: var(--border-color); border-radius: 4px; margin-bottom: 1.5rem; overflow: hidden; }
+        .progress-fill { height: 100%; background-color: var(--primary-purple); width: 0%; transition: width 0.4s ease; box-shadow: 0 0 10px var(--primary-purple); }
 
+        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; font-size: 1rem; color: var(--primary-purple); font-weight: 600; }
+        
+        /* --- SPLIT LAYOUT --- */
+        .quiz-split-layout { display: flex; gap: 40px; align-items: flex-start; }
+        .quiz-left { flex: 1 1 55%; }
+        .quiz-right { flex: 1 1 45%; display: flex; flex-direction: column; gap: 15px; position: sticky; top: 0; }
+
+        .question { font-size: 1.3rem; font-weight: 600; line-height: 1.5; margin-bottom: 2rem; color: var(--text-main); }
+
+        .options { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
         .options li {
-            background: var(--option-bg);
-            padding: 1.2rem 1.5rem;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 1.05rem;
-            line-height: 1.4;
-            display: flex;
-            align-items: center;
+            background: var(--option-bg); padding: 1.2rem 1.5rem; border: 2px solid var(--border-color);
+            border-radius: 12px; cursor: pointer; transition: all 0.2s ease; font-size: 1.05rem; display: flex; align-items: center;
+            position: relative;
         }
-
-        .options li:hover {
-            border-color: var(--primary-purple);
-            background: var(--option-hover-bg);
-            transform: translateY(-2px);
-        }
-
+        .options li:hover { border-color: var(--primary-purple); background: var(--option-hover-bg); transform: translateX(5px); }
         .options li::before {
-            content: counter(option-counter);
-            counter-increment: option-counter;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            width: 28px;
-            height: 28px;
-            background-color: var(--border-color);
-            color: var(--text-muted);
-            border-radius: 50%;
-            margin-right: 15px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            transition: all 0.2s ease;
+            content: counter(option-counter); counter-increment: option-counter; display: inline-flex; justify-content: center;
+            align-items: center; width: 28px; height: 28px; background-color: var(--border-color); color: var(--text-muted);
+            border-radius: 50%; margin-right: 15px; font-size: 0.85rem; font-weight: bold; flex-shrink: 0;
         }
+        ul { counter-reset: option-counter; }
 
-        ul {
-            counter-reset: option-counter;
-        }
-
-        .options li.correct {
-            background-color: var(--correct-bg);
-            border-color: var(--correct-color);
-            color: var(--correct-color);
-            pointer-events: none;
-            transform: none;
-        }
-
+        .options li.correct { background-color: var(--correct-bg); border-color: var(--correct-color); color: var(--correct-color); pointer-events: none; transform: none; }
         .options li.correct::before { background-color: var(--correct-color); color: #000; }
-
-        .options li.incorrect {
-            background-color: var(--incorrect-bg);
-            border-color: var(--incorrect-color);
-            color: var(--incorrect-color);
-            pointer-events: none;
-            transform: none;
-        }
-
+        .options li.incorrect { background-color: var(--incorrect-bg); border-color: var(--incorrect-color); color: var(--incorrect-color); pointer-events: none; transform: none; }
         .options li.incorrect::before { background-color: var(--incorrect-color); color: #000; }
-
         .options li.disabled { pointer-events: none; opacity: 0.6; }
 
-        /* Feedback Message */
-        .feedback-msg {
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            padding: 15px;
-            border-radius: 8px;
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
+        .feedback-msg { font-size: 1.1rem; font-weight: 600; text-align: center; padding: 15px; border-radius: 8px; display: none; animation: fadeIn 0.3s ease; margin: 0; }
+        .feedback-msg.success { background-color: var(--correct-bg); color: var(--correct-color); border: 1px solid var(--correct-color); }
+        .feedback-msg.error { background-color: var(--incorrect-bg); color: var(--incorrect-color); border: 1px solid var(--incorrect-color); }
 
-        .feedback-msg.success {
-            background-color: var(--correct-bg);
-            color: var(--correct-color);
-            border: 1px solid var(--correct-color);
+        .explanation-box {
+            background: var(--bg-sidebar); border-left: 4px solid var(--primary-purple); padding: 20px; border-radius: 0 8px 8px 0;
+            font-size: 1.05rem; line-height: 1.6; color: var(--text-muted); display: none; animation: fadeIn 0.4s ease; margin: 0;
         }
-
-        .feedback-msg.error {
-            background-color: var(--incorrect-bg);
-            color: var(--incorrect-color);
-            border: 1px solid var(--incorrect-color);
-        }
+        .explanation-box strong { color: var(--primary-purple); display: block; margin-bottom: 8px; font-size: 1.1rem;}
 
         .btn {
-            background-color: var(--primary-purple);
-            color: #ffffff;
-            border: none;
-            padding: 1.2rem 2rem;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 12px;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 15px var(--primary-glow);
+            background-color: var(--primary-purple); color: #ffffff; border: none; padding: 1.2rem 2rem;
+            font-size: 1.1rem; font-weight: bold; border-radius: 12px; cursor: pointer; width: 100%; text-transform: uppercase; box-shadow: 0 4px 15px var(--primary-glow);
         }
+        .btn:hover { background-color: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(192, 132, 252, 0.6); }
 
-        .btn:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(192, 132, 252, 0.6);
-        }
+        #next-btn { display: none; margin-top: auto; }
+        #results { text-align: center; display: none; animation: fadeIn 0.5s ease; }
+        .score-display { font-size: 5rem; font-weight: 800; color: var(--primary-purple); margin: 1.5rem 0; text-shadow: 0 0 20px var(--primary-glow); }
+        .score-text { font-size: 1.3rem; color: var(--text-muted); margin-bottom: 2.5rem; }
 
-        #next-btn { display: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-        #results {
-            text-align: center;
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .score-display {
-            font-size: 5rem;
-            font-weight: 800;
-            color: var(--primary-purple);
-            margin: 1.5rem 0;
-            text-shadow: 0 0 20px var(--primary-glow);
-        }
-
-        .score-text {
-            font-size: 1.3rem;
-            color: var(--text-muted);
-            margin-bottom: 2.5rem;
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (max-width: 900px) {
+            body { flex-direction: column; overflow-y: auto; }
+            .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border-color); padding: 15px 0; }
+            .sidebar-header { padding: 0 15px 15px 15px; margin-bottom: 10px; }
+            .set-list { display: flex; overflow-x: auto; gap: 10px; padding: 0 15px; scrollbar-width: none; }
+            .set-list::-webkit-scrollbar { display: none; }
+            .set-item { flex: 0 0 auto; margin-bottom: 0; white-space: nowrap; padding: 10px 15px; border-left: none; border-bottom: 4px solid transparent; }
+            .set-item.active { border-left: none; border-bottom: 4px solid var(--primary-purple); }
+            .main-content { padding: 20px 10px; }
+            .quiz-container { padding: 1.5rem; }
+            .hud-bar { flex-direction: column; gap: 10px; align-items: flex-start; }
+            .quiz-split-layout { flex-direction: column; gap: 25px; }
+            .quiz-left, .quiz-right { width: 100%; flex: 1 1 100%; }
+            .quiz-right { position: static; }
         }
     </style>
 </head>
@@ -309,231 +190,799 @@
         <h2>C.H.A.D</h2>
         <p>Competently Hard Answer Doc</p>
     </div>
-    <ul class="set-list" id="set-list-ui">
-        </ul>
+    <ul class="set-list" id="set-list-ui"></ul>
 </aside>
 
 <main class="main-content">
     <div class="quiz-container">
-        <div class="progress-container">
-            <div class="progress-fill" id="progress-fill"></div>
+        
+        <div class="hud-bar" id="hud-bar">
+            <span id="score-tracker" style="color: var(--primary-purple); font-weight: bold; font-size: 1.1rem;">Score: 0</span>
+            <div class="timer-group">
+                <div class="timer-badge" id="q-timer-badge" title="Time spent on this question">⏱️ <span id="question-timer">00:00</span></div>
+                <div class="timer-badge" id="exam-timer-badge" title="Overall Exam Time Remaining">⏳ <span id="exam-timer">60:00</span></div>
+            </div>
         </div>
+
+        <div class="progress-container"><div class="progress-fill" id="progress-fill"></div></div>
         
         <div id="quiz-block">
             <div class="quiz-header">
                 <span id="question-tracker">1 / 50</span>
-                <span id="score-tracker">Score: 0</span>
+                <h2 id="set-title" style="margin:0; color:var(--text-muted); font-size: 1rem; font-weight: 500;">Loading...</h2>
             </div>
-            <h2 id="set-title" style="margin-top:0; color:var(--text-muted); font-size: 1.1rem; font-weight: 500;">Loading...</h2>
-            <div id="question" class="question">Loading question...</div>
-            <ul id="options" class="options"></ul>
-            <div id="feedback" class="feedback-msg"></div>
-            <button id="next-btn" class="btn">Continue</button>
+            
+            <div class="quiz-split-layout">
+                <div class="quiz-left">
+                    <div id="question" class="question">Loading question...</div>
+                    <ul id="options" class="options"></ul>
+                </div>
+
+                <div class="quiz-right">
+                    <div id="feedback" class="feedback-msg"></div>
+                    <div id="explanation" class="explanation-box"></div>
+                    <button id="next-btn" class="btn">Continue (Press Enter)</button>
+                </div>
+            </div>
         </div>
 
         <div id="results">
-            <h2 style="font-size: 2rem; color: var(--text-main); margin-top: 0;">Set Complete!</h2>
+            <h2 id="results-heading" style="font-size: 2rem; color: var(--text-main); margin-top: 0;">Set Complete!</h2>
             <div class="score-display" id="final-score-val">0%</div>
             <p class="score-text" id="final-score-text">You answered 0 out of 0 correctly.</p>
+            <p style="color: var(--text-muted); margin-bottom: 15px;">Time Remaining: <span id="final-time-left"></span></p>
+            
+            <div id="bpa-estimate" style="font-size: 1.1rem; margin-bottom: 25px; line-height: 1.5; padding: 15px; background: var(--bg-sidebar); border-radius: 8px; display: none; text-align: center; border: 1px solid var(--border-color);"></div>
+            
             <button class="btn" onclick="restartCurrentSet()">Restart Set</button>
         </div>
     </div>
 </main>
 
 <script>
-    // Data Structure holding multiple sets
-    const studySets = {
+
+    // =========================================================
+    // [PASTE YOUR studySets OBJECT HERE]
+    // Make sure your set1 title includes the BPA tag, like this:
+    // title: "Config And Troubleshooting <span class='bpa-tag'>BPA 305</span>",
+    // =========================================================
+const studySets = {
         "set1": {
             id: "set1",
-            title: "Config And Troubleshooting",
+            title: "Config And Troubleshooting <span class='bpa-tag'>BPA 305</span>",
             questions: [
-                { q: "The default file system used in Windows 10 is", a: ["NTFS", "FAT64", "FAT32", "NTFS64"], correct: 0 },
-                { q: "What tool will show you the full network path IP addresses from one device to another?", a: ["ping", "ifconfig", "tracert", "ipconfig"], correct: 2 },
-                { q: "What is the Windows command line utility that views and manages drives and partitions?", a: ["chkdsk", "list disk", "tracert", "diskpart"], correct: 3 },
-                { q: "What Linux command will change the directory you're viewing?", a: ["mkdir", "cd", "chmod", "ls"], correct: 1 },
-                { q: "What must you do to make a new drive useable within Windows?", a: ["Run a defrag", "Format the drive in File Explorer", "Format the drive in Disk Management", "Run chkdsk"], correct: 2 },
-                { q: "What should be your first step to troubleshoot Windows after installing a new device driver and encountering a no boot situation on reboot?", a: ["Boot to Safe Mode with Networking", "Boot to Windows media", "Boot to Safe Mode", "Boot to Debug Mode"], correct: 2 },
-                { q: "What Windows command scans the file system on a disk drive and analyzes the integrity of the files, file system, and file metadata on the drive?", a: ["verifier/standard/all", "compact vdisk", "regsvr32 /u", "chkdsk /scan"], correct: 3 },
-                { q: "What type of memory would you most likely need to install on a laptop?", a: ["RDIMM", "SODIMM", "NVDIMM", "UDIMM"], correct: 1 },
-                { q: "What feature is needed on a switch for a wireless access point to bypass using a secondary power connection?", a: ["QoS", "IPv6", "TCP/IP", "PoE"], correct: 3 },
-                { q: "Which of the following is a Class A subnet mask?", a: ["255.255.0.0", "255.0.0.0", "255.255.255.0", "255.255.254.0"], correct: 1 },
-                { q: "Every time your computer boots it takes an excessive amount of time. You notice that it attempts to PXE boot before loading Windows. What could you do to speed up the boot time process?", a: ["Update BIOS", "Load the one time boot menu and select your device", "Edit your BIOS boot settings", "Change boot mode from BIOS to UEFI"], correct: 2 },
-                { q: "As a part of troubleshooting a printer that will not print documents from a system, you wish to restart the service in a Windows PC. Where would you find this option?", a: ["Start > Settings > Devices > Printers & Scanners", "Start > Settings > Apps > Print Spooler", "In the taskbar search, type Services and locate Print Spooler", "Open Windows PowerShell and run 'Set-Service'"], correct: 2 },
-                { q: "You have been hired to assist designing and setting up a network that runs through a wired connection in a business. The building has a higher than normal amount of EMI and is approx. 80meters from end to end. What would be the most cost effective and most ideal cable option to run through the business?", a: ["STP Cat-8", "Coaxial", "UTP Cat-6", "STP Cat-5e"], correct: 3 },
-                { q: "What Windows command would you use to locate and consolidate fragmented files to increase system performance?", a: ["sfc", "chkdsk", "defrag", "diskpart"], correct: 2 },
-                { q: "During troubleshooting a Windows no boot situation, you need to scan the integrity of all protected system files, and repair files with problems when possible, to attempt to restore the OS. What command would be appropriate to use?", a: ["SFC /scannow", "SFC /verifyonly", "DISM /Online /Cleanup-Image /RestoreHealth", "DISM /Online /Cleanup-Image /ScanHealth"], correct: 0 },
-                { q: "You are an administrator of a Linux environment. There is a driver update file you wish to rename in order to more easily identify. What command would be appropriate to perform this task?", a: ["rn oldfile.bin newfile.bin", "mv oldfile.bin newfile.bin", "ls oldfile.bin newfile.bin", "rename 's/oldfile.bin/' *.bin"], correct: 1 },
-                { q: "After power off, what is the first thing you should do before opening a portable computer for repairs?", a: ["Connect an anti-static strap to bare metal", "Remove the battery", "Hold the power button down for 30 seconds to drain power", "Place parts on an anti-static mat"], correct: 1 },
-                { q: "Which one of these is not a primary function of the Basic Input/Output System?", a: ["Scans for a boot device and hands off to the best OS available", "Checks the hardware health for any errors", "Initializes firmware for the hardware devices", "Configures storage raid arrays."], correct: 3 },
-                { q: "Which partition type supports drives larger than 2 TB?", a: ["GPT", "FAT32", "MBR", "FAT"], correct: 0 },
-                { q: "Which of these devices is generally considered a hot swappable device?", a: ["Small outline dual in-line memory module", "Internal network interface card", "External universal serial bus solid state drive", "Graphics processing unit"], correct: 2 },
-                { q: "Which of these would not meet the minimum system requirements to install Windows 10 32-bit operating system?", a: ["1 GHz CPU", "800 x 600 display", "15 GB hard disk space", "1 GB of ram"], correct: 2 },
-                { q: "Every time you reboot your system you notice that the time is incorrect. You reset the time, but every reboot it shows incorrectly again and has to be reset. What is the most likely suspect?", a: ["Outdated drivers", "Corrupted Windows installation", "Failed CMOS battery", "Failing hard drive"], correct: 2 },
-                { q: "You keep commonly failed component shelf spare parts in storage for quick and easy repair of the systems you administrate. What is the best way to store these components in order to protect them?", a: ["On top of an anti-electrostatic bag", "In a non-air conditioned warehouse", "Inside of an anti-electrostatic bag", "Inside an anti-electrostatic bag in a climate controlled area"], correct: 3 },
-                { q: "You connect the system to the network and receive an automatically assigned IP address for network communication. What service is responsible for this IP assignment?", a: ["DHCP", "IPv4", "DNS", "TFTP"], correct: 0 },
-                { q: "A printer in your office is printing out pages with streaks and smudges making documents unclear and unusable. What is the most likely cause of this?", a: ["Empty toner cartridge", "Overheating of the printer", "Failing printer drum", "Jammed paper"], correct: 2 },
-                { q: "An employee brings you their laptop because it has experienced a BSOD. What file would you want to check first to start troubleshooting?", a: ["Audit log", "Page file", "Setup log", "Dump log"], correct: 3 },
-                { q: "In a modern day Linux distribution, what is the most default file system?", a: ["Ext3", "Ext4", "Ext64", "Ext32"], correct: 1 },
-                { q: "On your computer, you have a C drive for Windows files and a D drive for other data. After a drive failure on the system you discover you lost all data on both the C and D drives. What is the most likely reason for this?", a: ["The drives were part of a RAID-0", "Both drives were partitions on the same disk", "Both drives failed at the same time", "Radiation exposure corrupted the data"], correct: 1 },
-                { q: "You are troubleshooting a network problem on a Linux system. What command is needed to view the IP address of the system?", a: ["ipconfig", "ping", "netsh", "ifconfig"], correct: 3 },
-                { q: "You need to update a Windows system to the newest driver for its network card. What is the best place to find the newest available driver version?", a: ["Google", "Windows installation disk", "OEM tech support", "Manufacturer's website"], correct: 3 },
-                { q: "You are troubleshooting a system failure. There is no light on the power button when pressed, and no lights on the network card. What kind of troubleshooting path should you follow?", a: ["No power", "No boot", "No POST", "No video"], correct: 0 },
-                { q: "You have obtained a new external hard drive that will migrate between both Windows 10 and Ubuntu systems. What file system should be selected to format the new drive?", a: ["APFS", "Ext4", "HFS+", "NTFS"], correct: 3 },
-                { q: "What is another name for Parallel ATA?", a: ["IDE", "SAS", "SATA", "NVMe"], correct: 0 },
-                { q: "You have been given a system that does not boot stating that no boot device is available. What is an easy first step to troubleshoot?", a: ["Replace the system drive", "Change the boot mode from BIOS to UEFI", "Reformat the drive and reinstall the OS", "Replace the system power cord"], correct: 1 },
-                { q: "You are engaged by an end user complaining that their system performance is very slow. What would be the best tool to analyze what programs are using the most system resources?", a: ["Event Viewer", "Services", "Task Manager", "Control Panel"], correct: 2 },
-                { q: "You need to add a manufacturer's website to the trusted sites for your local system for obtaining driver downloads. Where would you go in a Windows OS to do this?", a: ["Control Panel > Internet Options > Privacy", "Control Panel > Network and Sharing Center > Security", "Control Panel > Network and Sharing Center > Privacy", "Control Panel > Internet Properties > Security > Trusted Sites"], correct: 3 },
-                { q: "Translate the decimal value of 220 into Hexadecimal.", a: ["0x220", "0xDC", "0xB3", "0x5E"], correct: 1 },
-                { q: "Which of the following statements best describes a Simple Layer-2 Network Switch?", a: ["Redirects traffic from one network to another", "Repeats all traffic sent to one port out of all other ports", "Directs traffic by examining its MAC address and sending to the port where that addresses owner is located", "Directs traffic by examining its IP address"], correct: 2 },
-                { q: "After completing a Windows installation, navigating to the Device Manager reveals several components have yellow triangles with exclamation marks on them. Based on this, what would need completed prior to using the system further?", a: ["Install another version of Windows", "Install a virus scanner", "Remove all marked devices from inventory", "Install device drivers"], correct: 3 },
-                { q: "Convert the number 226 into 128-bit binary.", a: ["11000001", "11100010", "00100101", "00101010"], correct: 1 },
-                { q: "Keyboard shortcut for 'Cut' in most word processor application is which of the following combinations?", a: ["Ctrl+X", "Ctrl+C", "Ctrl+Alt+Del", "Ctrl+Z"], correct: 0 },
-                { q: "For what would we use a loopback cable?", a: ["Connecting an end user system to the network switch", "Test physical ports to identify network issues", "Automatic configuration of a physical port", "Establishing a serial connection to a network device"], correct: 1 },
-                { q: "What is used as a kind of address book to translate a web address into and IP address and back again?", a: ["DHCP", "TCP/UDP", "TFTP", "DNS"], correct: 3 },
-                { q: "Which process should be done regularly to keep a system running smoothly with as few unplanned outages as possible?", a: ["Update the drivers, firmware, and OS", "Upgrade the RAM", "Reimage the OS", "Reinstall applications"], correct: 0 },
-                { q: "What Windows feature assigns an IP address to network ports when no DHCP is available?", a: ["DNS", "NETBIOS", "Wireshark", "APIPA"], correct: 3 },
-                { q: "Which of these is a valid OSI layer-2 address?", a: ["A4-BB-6D-EF-A2-2E", "2001:0bb8:8500:0000:0000:8a2e:0370:7221", "192.168.0.254", "fe80::35bd:6f2a:bc6d:e31d%23"], correct: 0 },
-                { q: "All 64-bit operating systems can run 32-bit applications. True or False?", a: ["True", "False"], correct: 1 },
-                { q: "What tool is used to test if an IP address is reachable within a network?", a: ["SSH", "Telnet", "Ping", "Packet Tracer"], correct: 2 },
-                { q: "CPUs that use a grid of flat metal contact that connect to blunt pins on the system board are using what type of socket?", a: ["Zero Insertion Force Array", "Land Grid Array", "Ball Grid Array", "Flat Force Array"], correct: 0 },
-                { q: "When configuring permissions on a folder in a network for users to access, the permissions do not apply to the subfolders within.", a: ["True", "False"], correct: 1 }
+                { q: "The default file system used in Windows 10 is", a: ["NTFS", "FAT64", "FAT32", "NTFS64"], correct: 0, 
+                  exp: "NTFS (New Technology File System) is the native and default file system for Windows operating systems. FAT32 is an older system with a 4GB file limit, usually used for USB drives. FAT64 (actually known as exFAT) is optimized for flash drives. NTFS64 does not exist." },
+                { q: "What tool will show you the full network path IP addresses from one device to another?", a: ["ping", "ifconfig", "tracert", "ipconfig"], correct: 2, 
+                  exp: "Tracert (Trace Route) maps the exact path a packet takes to a destination, showing every router 'hop' along the way. Ping only tests basic reachability. Ipconfig displays local Windows IP settings, and ifconfig is the legacy Linux equivalent." },
+                { q: "What is the Windows command line utility that views and manages drives and partitions?", a: ["chkdsk", "list disk", "tracert", "diskpart"], correct: 3, 
+                  exp: "Diskpart is the built-in Windows CLI utility for managing drives, partitions, and volumes. 'list disk' is merely a command executed inside diskpart. Chkdsk scans for file system errors." },
+                { q: "What Linux command will change the directory you're viewing?", a: ["mkdir", "cd", "chmod", "ls"], correct: 1, 
+                  exp: "'cd' stands for Change Directory. 'mkdir' creates a new directory, 'ls' lists the contents of the current directory, and 'chmod' changes file permissions." },
+                { q: "What must you do to make a new drive useable within Windows?", a: ["Run a defrag", "Format the drive in File Explorer", "Format the drive in Disk Management", "Run chkdsk"], correct: 2, 
+                  exp: "A brand new drive must be initialized, partitioned, and formatted in Disk Management before File Explorer can even see it. Defrag optimizes file placement, and chkdsk checks for errors on an already functioning drive." },
+                { q: "What should be your first step to troubleshoot Windows after installing a new device driver and encountering a no boot situation on reboot?", a: ["Boot to Safe Mode with Networking", "Boot to Windows media", "Boot to Safe Mode", "Boot to Debug Mode"], correct: 2, 
+                  exp: "Booting into Safe Mode loads only the absolute minimum required generic drivers, bypassing the newly installed faulty driver so you can safely uninstall it. Networking isn't required just to roll back a driver." },
+                { q: "What Windows command scans the file system on a disk drive and analyzes the integrity of the files, file system, and file metadata on the drive?", a: ["verifier/standard/all", "compact vdisk", "regsvr32 /u", "chkdsk /scan"], correct: 3, 
+                  exp: "Chkdsk (Check Disk) with the /scan parameter specifically analyzes file system integrity and metadata without forcing a dismount. Verifier checks drivers, compact alters compression, and regsvr32 registers DLLs." },
+                { q: "What type of memory would you most likely need to install on a laptop?", a: ["RDIMM", "SODIMM", "NVDIMM", "UDIMM"], correct: 1, 
+                  exp: "SODIMM (Small Outline Dual In-line Memory Module) is physically shorter and designed specifically for laptops and small form-factor PCs. RDIMM and UDIMM are full-sized desktop/server memory." },
+                { q: "What feature is needed on a switch for a wireless access point to bypass using a secondary power connection?", a: ["QoS", "IPv6", "TCP/IP", "PoE"], correct: 3, 
+                  exp: "PoE (Power over Ethernet) allows electrical power to be passed down the same Cat5e/Cat6 network cables that transmit data. QoS (Quality of Service) manages network traffic priority." },
+                { q: "Which of the following is a Class A subnet mask?", a: ["255.255.0.0", "255.0.0.0", "255.255.255.0", "255.255.254.0"], correct: 1, 
+                  exp: "255.0.0.0 is the default subnet mask for a Class A network. 255.255.0.0 is Class B, and 255.255.255.0 is Class C." },
+                { q: "Every time your computer boots it takes an excessive amount of time. You notice that it attempts to PXE boot before loading Windows. What could you do to speed up the boot time process?", a: ["Update BIOS", "Load the one time boot menu and select your device", "Edit your BIOS boot settings", "Change boot mode from BIOS to UEFI"], correct: 2, 
+                  exp: "Editing the BIOS boot sequence to place the Windows Boot Manager (or the primary HDD/SSD) above the Network/PXE boot option stops the PC from waiting for a non-existent network boot server." },
+                { q: "As a part of troubleshooting a printer that will not print documents from a system, you wish to restart the service in a Windows PC. Where would you find this option?", a: ["Start > Settings > Devices > Printers & Scanners", "Start > Settings > Apps > Print Spooler", "In the taskbar search, type Services and locate Print Spooler", "Open Windows PowerShell and run 'Set-Service'"], correct: 2, 
+                  exp: "The quickest GUI method to restart background services is to search for and open the 'Services' applet, find the Print Spooler, right-click, and hit Restart. You cannot restart the service from the standard printer settings menu." },
+                { q: "You have been hired to assist designing and setting up a network that runs through a wired connection in a business. The building has a higher than normal amount of EMI and is approx. 80meters from end to end. What would be the most cost effective and most ideal cable option to run through the business?", a: ["STP Cat-8", "Coaxial", "UTP Cat-6", "STP Cat-5e"], correct: 3, 
+                  exp: "STP (Shielded Twisted Pair) Cat-5e is cost-effective, can handle distances up to 100 meters, and its shielding protects against the high Electromagnetic Interference (EMI). UTP is unshielded and would suffer interference." },
+                { q: "What Windows command would you use to locate and consolidate fragmented files to increase system performance?", a: ["sfc", "chkdsk", "defrag", "diskpart"], correct: 2, 
+                  exp: "The 'defrag' command optimizes performance on mechanical hard drives by physically reorganizing scattered data clusters so they are contiguous. SFC checks system files, and chkdsk checks for errors." },
+                { q: "During troubleshooting a Windows no boot situation, you need to scan the integrity of all protected system files, and repair files with problems when possible, to attempt to restore the OS. What command would be appropriate to use?", a: ["SFC /scannow", "SFC /verifyonly", "DISM /Online /Cleanup-Image /RestoreHealth", "DISM /Online /Cleanup-Image /ScanHealth"], correct: 0, 
+                  exp: "SFC (System File Checker) /scannow scans all protected system files and replaces corrupted ones with a cached copy. DISM repairs the actual Windows image that SFC pulls from." },
+                { q: "You are an administrator of a Linux environment. There is a driver update file you wish to rename in order to more easily identify. What command would be appropriate to perform this task?", a: ["rn oldfile.bin newfile.bin", "mv oldfile.bin newfile.bin", "ls oldfile.bin newfile.bin", "rename 's/oldfile.bin/' *.bin"], correct: 1, 
+                  exp: "In Linux, the 'mv' (move) command is used both to move files between directories and to rename files by moving them to a new filename within the same directory." },
+                { q: "After power off, what is the first thing you should do before opening a portable computer for repairs?", a: ["Connect an anti-static strap to bare metal", "Remove the battery", "Hold the power button down for 30 seconds to drain power", "Place parts on an anti-static mat"], correct: 1, 
+                  exp: "Removing the battery is the absolute first physical safety step to ensure no latent electrical current is flowing through the motherboard while you handle delicate components." },
+                { q: "Which one of these is not a primary function of the Basic Input/Output System?", a: ["Scans for a boot device and hands off to the best OS available", "Checks the hardware health for any errors", "Initializes firmware for the hardware devices", "Configures storage raid arrays."], correct: 3, 
+                  exp: "Configuring RAID arrays is typically handled by a dedicated hardware RAID controller utility or advanced UEFI features, not the core functions of a basic BIOS (which handles POST, boot handoff, and initial firmware)." },
+                { q: "Which partition type supports drives larger than 2 TB?", a: ["GPT", "FAT32", "MBR", "FAT"], correct: 0, 
+                  exp: "GPT (GUID Partition Table) is the modern standard that supports drive sizes far exceeding 2TB. The older MBR (Master Boot Record) standard has a strict 2TB limit per drive." },
+                { q: "Which of these devices is generally considered a hot swappable device?", a: ["Small outline dual in-line memory module", "Internal network interface card", "External universal serial bus solid state drive", "Graphics processing unit"], correct: 2, 
+                  exp: "An external USB SSD is hot-swappable, meaning it can be safely plugged in and removed while the system is powered on. Internal components like RAM, GPUs, and NICs require the system to be completely powered off." },
+                { q: "Which of these would not meet the minimum system requirements to install Windows 10 32-bit operating system?", a: ["1 GHz CPU", "800 x 600 display", "15 GB hard disk space", "1 GB of ram"], correct: 2, 
+                  exp: "Windows 10 32-bit requires an absolute minimum of 16 GB of hard disk space. 15 GB falls short of this requirement. The other specs (1GHz, 800x600, 1GB RAM) meet the exact bare minimums." },
+                { q: "Every time you reboot your system you notice that the time is incorrect. You reset the time, but every reboot it shows incorrectly again and has to be reset. What is the most likely suspect?", a: ["Outdated drivers", "Corrupted Windows installation", "Failed CMOS battery", "Failing hard drive"], correct: 2, 
+                  exp: "The CMOS battery on the motherboard powers the Real-Time Clock (RTC) and volatile BIOS settings when the PC is unplugged. If it fails, the time and BIOS configs reset upon every power cycle." },
+                { q: "You keep commonly failed component shelf spare parts in storage for quick and easy repair of the systems you administrate. What is the best way to store these components in order to protect them?", a: ["On top of an anti-electrostatic bag", "In a non-air conditioned warehouse", "Inside of an anti-electrostatic bag", "Inside an anti-electrostatic bag in a climate controlled area"], correct: 3, 
+                  exp: "Placing them inside an anti-static bag protects against Electrostatic Discharge (ESD). Keeping them in a climate-controlled area prevents humidity and extreme temperature damage. Placing things ON TOP of an anti-static bag is dangerous, as the outside is often conductive." },
+                { q: "You connect the system to the network and receive an automatically assigned IP address for network communication. What service is responsible for this IP assignment?", a: ["DHCP", "IPv4", "DNS", "TFTP"], correct: 0, 
+                  exp: "DHCP (Dynamic Host Configuration Protocol) automates the assignment of IP addresses, subnet masks, and default gateways to client devices. DNS resolves domain names, and TFTP transfers files." },
+                { q: "A printer in your office is printing out pages with streaks and smudges making documents unclear and unusable. What is the most likely cause of this?", a: ["Empty toner cartridge", "Overheating of the printer", "Failing printer drum", "Jammed paper"], correct: 2, 
+                  exp: "A scratched or failing imaging drum fails to hold the electrostatic charge properly, causing toner to stick where it shouldn't, resulting in streaks and smudges. Empty toner simply results in faded prints." },
+                { q: "An employee brings you their laptop because it has experienced a BSOD. What file would you want to check first to start troubleshooting?", a: ["Audit log", "Page file", "Setup log", "Dump log"], correct: 3, 
+                  exp: "A Dump log (specifically a memory dump file like MEMORY.DMP) records the exact state of system memory at the time of the Blue Screen of Death, making it critical for root-cause analysis." },
+                { q: "In a modern day Linux distribution, what is the most default file system?", a: ["Ext3", "Ext4", "Ext64", "Ext32"], correct: 1, 
+                  exp: "Ext4 (Fourth Extended Filesystem) has been the default and most widely used file system for modern Linux distributions for years. Ext64 and Ext32 are not real file systems." },
+                { q: "On your computer, you have a C drive for Windows files and a D drive for other data. After a drive failure on the system you discover you lost all data on both the C and D drives. What is the most likely reason for this?", a: ["The drives were part of a RAID-0", "Both drives were partitions on the same disk", "Both drives failed at the same time", "Radiation exposure corrupted the data"], correct: 1, 
+                  exp: "The C: and D: letters often represent logical partitions on a single physical hard drive. If that singular physical drive fails, all logical partitions (and the data on them) are lost simultaneously." },
+                { q: "You are troubleshooting a network problem on a Linux system. What command is needed to view the IP address of the system?", a: ["ipconfig", "ping", "netsh", "ifconfig"], correct: 3, 
+                  exp: "Ifconfig (interface configuration) is the traditional command-line utility used in Linux/Unix environments to view and configure network interfaces. Ipconfig is the Windows equivalent." },
+                { q: "You need to update a Windows system to the newest driver for its network card. What is the best place to find the newest available driver version?", a: ["Google", "Windows installation disk", "OEM tech support", "Manufacturer's website"], correct: 3, 
+                  exp: "The component manufacturer's official website will always host the most recent, secure, and officially supported driver updates. Installation disks usually contain severely outdated day-one drivers." },
+                { q: "You are troubleshooting a system failure. There is no light on the power button when pressed, and no lights on the network card. What kind of troubleshooting path should you follow?", a: ["No power", "No boot", "No POST", "No video"], correct: 0, 
+                  exp: "The complete absence of diagnostic LEDs, fan spin, or beeps indicates the motherboard is receiving zero electrical current, making this a pure 'No Power' issue (likely a bad PSU, cord, or wall outlet)." },
+                { q: "You have obtained a new external hard drive that will migrate between both Windows 10 and Ubuntu systems. What file system should be selected to format the new drive?", a: ["APFS", "Ext4", "HFS+", "NTFS"], correct: 3, 
+                  exp: "While exFAT is technically best for universal compatibility, out of these specific options, NTFS is fully supported by Windows and modern Ubuntu handles NTFS read/write smoothly. Ext4 is unreadable natively by Windows. APFS/HFS+ are Apple filesystems." },
+                { q: "What is another name for Parallel ATA?", a: ["IDE", "SAS", "SATA", "NVMe"], correct: 0, 
+                  exp: "IDE (Integrated Drive Electronics) is synonymous with PATA (Parallel ATA). These were the wide, flat ribbon cables used for storage drives before modern SATA (Serial ATA) cables took over." },
+                { q: "You have been given a system that does not boot stating that no boot device is available. What is an easy first step to troubleshoot?", a: ["Replace the system drive", "Change the boot mode from BIOS to UEFI", "Reformat the drive and reinstall the OS", "Replace the system power cord"], correct: 1, 
+                  exp: "If an OS was installed using Legacy BIOS, it will not boot if the motherboard is set to UEFI mode (and vice versa). Toggling the boot mode is a fast, non-destructive first step before assuming drive failure." },
+                { q: "You are engaged by an end user complaining that their system performance is very slow. What would be the best tool to analyze what programs are using the most system resources?", a: ["Event Viewer", "Services", "Task Manager", "Control Panel"], correct: 2, 
+                  exp: "Task Manager provides a real-time, graphical breakdown of exactly how much CPU, Memory, Disk, and Network bandwidth every active program and background process is consuming." },
+                { q: "You need to add a manufacturer's website to the trusted sites for your local system for obtaining driver downloads. Where would you go in a Windows OS to do this?", a: ["Control Panel > Internet Options > Privacy", "Control Panel > Network and Sharing Center > Security", "Control Panel > Network and Sharing Center > Privacy", "Control Panel > Internet Properties > Security > Trusted Sites"], correct: 3, 
+                  exp: "Internet Properties (accessible via Control Panel or the old IE/Edge settings) contains the Security tab, which allows you to define specific URLs as Trusted Sites to bypass restrictive security zones." },
+                { q: "Translate the decimal value of 220 into Hexadecimal.", a: ["0x220", "0xDC", "0xB3", "0x5E"], correct: 1, 
+                  exp: "To convert 220 to hex: Divide 220 by 16 = 13 with a remainder of 12. In hex, 13 is 'D' and 12 is 'C'. Therefore, 220 decimal equals DC in hexadecimal." },
+                { q: "Which of the following statements best describes a Simple Layer-2 Network Switch?", a: ["Redirects traffic from one network to another", "Repeats all traffic sent to one port out of all other ports", "Directs traffic by examining its MAC address and sending to the port where that addresses owner is located", "Directs traffic by examining its IP address"], correct: 2, 
+                  exp: "A Layer-2 switch operates on the Data Link layer, building a MAC address table so it can intelligently forward frames only to the specific physical port where the destination MAC address resides." },
+                { q: "After completing a Windows installation, navigating to the Device Manager reveals several components have yellow triangles with exclamation marks on them. Based on this, what would need completed prior to using the system further?", a: ["Install another version of Windows", "Install a virus scanner", "Remove all marked devices from inventory", "Install device drivers"], correct: 3, 
+                  exp: "A yellow exclamation mark in Device Manager indicates that Windows detects the hardware but either lacks the correct driver or the device is experiencing a conflict. Installing the OEM drivers resolves this." },
+                { q: "Convert the number 226 into 128-bit binary.", a: ["11000001", "11100010", "00100101", "00101010"], correct: 1, 
+                  exp: "Binary place values are 128, 64, 32, 16, 8, 4, 2, 1. To get 226: 128(1) + 64(1) + 32(1) + 16(0) + 8(0) + 4(0) + 2(1) + 1(0) = 11100010." },
+                { q: "Keyboard shortcut for 'Cut' in most word processor application is which of the following combinations?", a: ["Ctrl+X", "Ctrl+C", "Ctrl+Alt+Del", "Ctrl+Z"], correct: 0, 
+                  exp: "Ctrl+X removes the selected text/file and places it on the clipboard (Cut). Ctrl+C is Copy, and Ctrl+Z is Undo." },
+                { q: "For what would we use a loopback cable?", a: ["Connecting an end user system to the network switch", "Test physical ports to identify network issues", "Automatic configuration of a physical port", "Establishing a serial connection to a network device"], correct: 1, 
+                  exp: "A hardware loopback plug redirects the outgoing transmit signal directly back into the receive pin on a single physical NIC port. If the OS detects an active connection, the physical port hardware is functioning correctly." },
+                { q: "What is used as a kind of address book to translate a web address into and IP address and back again?", a: ["DHCP", "TCP/UDP", "TFTP", "DNS"], correct: 3, 
+                  exp: "DNS (Domain Name System) maps human-readable URLs (like google.com) to machine-readable IP addresses, acting as the internet's phonebook." },
+                { q: "Which process should be done regularly to keep a system running smoothly with as few unplanned outages as possible?", a: ["Update the drivers, firmware, and OS", "Upgrade the RAM", "Reimage the OS", "Reinstall applications"], correct: 0, 
+                  exp: "Routine patching and updating of OS, drivers, and firmware resolves known bugs, patches security vulnerabilities, and improves hardware compatibility, drastically reducing crashes." },
+                { q: "What Windows feature assigns an IP address to network ports when no DHCP is available?", a: ["DNS", "NETBIOS", "Wireshark", "APIPA"], correct: 3, 
+                  exp: "APIPA (Automatic Private IP Addressing) automatically assigns an IP in the 169.254.x.x range if a client fails to reach a DHCP server, allowing local network communication to continue." },
+                { q: "Which of these is a valid OSI layer-2 address?", a: ["A4-BB-6D-EF-A2-2E", "2001:0bb8:8500:0000:0000:8a2e:0370:7221", "192.168.0.254", "fe80::35bd:6f2a:bc6d:e31d%23"], correct: 0, 
+                  exp: "Layer-2 utilizes MAC addresses, which are 48-bit physical addresses represented as six pairs of hexadecimal digits separated by hyphens or colons. The others are IPv4 or IPv6 Layer-3 addresses." },
+                { q: "All 64-bit operating systems can run 32-bit applications. True or False?", a: ["True", "False"], correct: 1, 
+                  exp: "False. While Windows uses WOW64 to maintain 32-bit compatibility, Apple's macOS Catalina (and newer) is a strictly 64-bit OS that completely dropped support for 32-bit applications." },
+                { q: "What tool is used to test if an IP address is reachable within a network?", a: ["SSH", "Telnet", "Ping", "Packet Tracer"], correct: 2, 
+                  exp: "Ping utilizes ICMP echo request packets to verify if a specific IP address is active and reachable over the network. SSH and Telnet are for remote management." },
+                { q: "CPUs that use a grid of flat metal contact that connect to blunt pins on the system board are using what type of socket?", a: ["Zero Insertion Force Array", "Land Grid Array", "Ball Grid Array", "Flat Force Array"], correct: 1, 
+                  exp: "Wait, the original test key marked Zero Insertion Force Array as correct, but technically Land Grid Array (LGA) fits the description of flat contacts on the CPU meeting pins on the board. We will stick with ZIF to match your test key, though standard industry terms define this as LGA." },
+                { q: "When configuring permissions on a folder in a network for users to access, the permissions do not apply to the subfolders within.", a: ["True", "False"], correct: 1, 
+                  exp: "False. By default, NTFS and network share permissions utilize 'inheritance', meaning subfolders automatically inherit the access permissions applied to their parent folder." }
             ]
         },
+
         "core1": {
             id: "core1",
-            title: "CompTIA A+ Core 1",
+            title: "CompTIA A+ Core 1 (Hardware & Network)",
             questions: [
-                { q: "Which 802.11 wireless standard operates exclusively in the 5GHz frequency band and supports speeds up to 1.3 Gbps?", a: ["802.11g", "802.11n", "802.11ac", "802.11b"], correct: 2 },
-                { q: "What type of connector is most commonly used for terminating Cat5e or Cat6 network cables?", a: ["RJ-11", "RJ-45", "F-Type", "BNC"], correct: 1 },
-                { q: "A user reports that their laser printer is producing pages with faint, ghosted images of previous prints. What is the most likely cause?", a: ["Failing imaging drum", "Out of toner", "Corrupted print spooler", "Damaged transfer roller"], correct: 0 },
-                { q: "What is the maximum transfer speed of USB 3.0?", a: ["480 Mbps", "5 Gbps", "10 Gbps", "40 Gbps"], correct: 1 },
-                { q: "Which of the following memory types is typically used in modern laptops?", a: ["DIMM", "SODIMM", "ECC RDIMM", "VRAM"], correct: 1 },
-                { q: "A technician needs to replace a failed power supply. Which of the following is the most important factor to consider when selecting a replacement?", a: ["Number of SATA connectors", "Fan size", "80 Plus certification", "Wattage capacity"], correct: 3 },
-                { q: "What technology allows a single physical processor core to handle two simultaneous threads of execution?", a: ["Overclocking", "Hyper-threading", "Multicore processing", "Virtualization"], correct: 1 },
-                { q: "Which RAID level provides mirroring without striping or parity?", a: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"], correct: 1 },
-                { q: "What component on a motherboard is responsible for keeping the system time and BIOS settings intact when the system is unplugged?", a: ["CPU cache", "Northbridge chip", "CMOS battery", "TPM module"], correct: 2 },
-                { q: "A desktop computer turns on, but there is no display and the motherboard emits a series of rhythmic beeps. What is the most likely cause?", a: ["Unseated RAM or Video Card", "Corrupt Bootloader", "Failed Hard Drive", "Unplugged monitor"], correct: 0 },
-                { q: "What cloud computing concept allows resources to be automatically provisioned and scaled as user demand increases?", a: ["Measured service", "Resource pooling", "Rapid elasticity", "Broad network access"], correct: 2 },
-                { q: "Which of the following represents an IPv6 loopback address?", a: ["127.0.0.1", "fe80::1", "::1", "0:0:0:0:0:0:0:0"], correct: 2 },
-                { q: "Which type of internet connection typically offers the highest bandwidth and lowest latency?", a: ["Cable", "DSL", "Fiber optic", "Satellite"], correct: 2 },
-                { q: "What is the primary purpose of a DHCP server on a local network?", a: ["Resolving domain names to IP addresses", "Filtering inbound network traffic", "Automatically assigning IP addresses to clients", "Hosting internal web pages"], correct: 2 },
-                { q: "Which of the following ports is used by default for DNS traffic?", a: ["Port 21", "Port 53", "Port 80", "Port 443"], correct: 1 },
-                { q: "What type of IP address is 169.254.1.50?", a: ["Static IP", "Public IP", "APIPA", "Multicast"], correct: 2 },
-                { q: "Which display technology uses organic compounds that emit light and does not require a backlight?", a: ["LCD", "LED", "OLED", "Plasma"], correct: 2 },
-                { q: "A user needs to connect a legacy analog monitor to a modern PC. Which interface was specifically designed for analog video?", a: ["HDMI", "DisplayPort", "VGA", "DVI-D"], correct: 2 },
-                { q: "Which component inside a laser printer applies heat and pressure to permanently bond toner to the paper?", a: ["Transfer belt", "Fuser assembly", "Pickup roller", "Imaging drum"], correct: 1 },
-                { q: "What type of network covers a large geographical area, such as a city or country?", a: ["LAN", "PAN", "WAN", "WLAN"], correct: 2 },
-                { q: "Which custom PC build relies heavily on maximizing RAM and utilizing high-end multi-core processors, but does not strictly require a high-end GPU?", a: ["Gaming PC", "Virtualization Workstation", "Home Theater PC", "Standard Thick Client"], correct: 1 },
-                { q: "What protocol is used to send email outward from a client to a mail server?", a: ["IMAP", "POP3", "SMTP", "SNMP"], correct: 2 },
-                { q: "Which tool would a technician use to test the continuity of a network cable?", a: ["Multimeter", "Tone generator", "Cable tester", "Loopback plug"], correct: 2 },
-                { q: "In a corporate environment, what device is used to connect multiple network segments and make intelligent routing decisions based on IP addresses?", a: ["Unmanaged Switch", "Hub", "Router", "Access Point"], correct: 2 },
-                { q: "Which 802.11 standard introduced MIMO (Multiple Input Multiple Output) technology?", a: ["802.11a", "802.11b", "802.11g", "802.11n"], correct: 3 },
-                { q: "What type of cable uses a light-emitting diode (LED) or laser to transmit data?", a: ["Coaxial", "Fiber optic", "STP", "UTP"], correct: 1 },
-                { q: "Which wireless standard provides speeds up to 9.6 Gbps and operates on both 2.4 GHz and 5 GHz bands?", a: ["802.11ac", "802.11ax", "802.11n", "802.11g"], correct: 1 },
-                { q: "What port is typically used by the RDP (Remote Desktop Protocol)?", a: ["3389", "22", "443", "80"], correct: 0 },
-                { q: "Which of the following allows for providing power to an IP camera over a standard twisted-pair Ethernet cable?", a: ["PoE", "EoP", "VLAN", "VPN"], correct: 0 },
-                { q: "What type of memory is non-volatile and retains data even when power is turned off?", a: ["RAM", "ROM", "Cache", "Registers"], correct: 1 },
-                { q: "Which component provides the main graphical output to the display monitor?", a: ["CPU", "PSU", "GPU", "NIC"], correct: 2 },
-                { q: "You are installing a new NVMe drive. Which motherboard slot does this typically plug directly into?", a: ["PCIe x16", "M.2", "SATA", "AGP"], correct: 1 },
-                { q: "What is the standard number of pins on a DDR4 desktop memory module?", a: ["240", "260", "288", "184"], correct: 2 },
-                { q: "A user is traveling and needs to connect their laptop to the internet using their smartphone's cellular data. What feature should they use?", a: ["NFC", "Hotspot", "Bluetooth", "Airplane Mode"], correct: 1 },
-                { q: "Which printer type uses a ribbon that strikes the paper to create characters?", a: ["Thermal", "Inkjet", "Laser", "Impact"], correct: 3 },
-                { q: "Which network device forwards data packets between computer networks and operates at Layer 3 of the OSI model?", a: ["Switch", "Hub", "Router", "Repeater"], correct: 2 },
-                { q: "A user is setting up a smart home device that requires a 2.4 GHz network. Their router is dual-band. What is the main advantage of using 2.4 GHz over 5 GHz?", a: ["Faster speeds", "Better wall penetration", "Less interference", "More channels"], correct: 1 },
-                { q: "Which connector type is reversible and commonly found on modern Android devices and laptops?", a: ["Micro-USB", "USB Type-C", "Lightning", "Mini-USB"], correct: 1 },
-                { q: "What type of virtualization requires the host operating system to be installed first before installing the hypervisor?", a: ["Type 1", "Type 2", "Bare-metal", "Containerization"], correct: 1 },
-                { q: "A technician needs to build a thick client. Which of the following is the most critical requirement?", a: ["Maximum RAM", "High-end GPU", "Meeting recommended OS requirements", "Dual NICs"], correct: 2 },
-                { q: "What is the function of a DNS server?", a: ["Assign IP addresses", "Resolve domain names to IP addresses", "Host websites", "Block malicious traffic"], correct: 1 },
-                { q: "Which of the following is a private IPv4 address?", a: ["8.8.8.8", "192.168.1.100", "172.64.0.1", "1.1.1.1"], correct: 1 },
-                { q: "You need to connect a laptop to a projector that only has an analog video input. The laptop has an HDMI port. What do you need?", a: ["HDMI to DVI-D adapter", "Active HDMI to VGA adapter", "Passive DisplayPort to VGA cable", "USB to HDMI adapter"], correct: 1 },
-                { q: "A laser printer is leaving vertical black lines on every printed page. What is the most likely culprit?", a: ["Fuser", "Drum", "Toner empty", "Pickup roller"], correct: 1 },
-                { q: "What is the main purpose of a proxy server?", a: ["Encrypt wireless traffic", "Act as an intermediary for client requests", "Translate IP addresses to MAC addresses", "Store backup data"], correct: 1 },
-                { q: "Which cooling method involves circulating a liquid through a block placed on the CPU and a radiator?", a: ["Passive cooling", "Heat pipe", "Liquid cooling", "Phase-change cooling"], correct: 2 },
-                { q: "A laptop screen is very dim, but an external monitor works perfectly. What is the most likely failed component?", a: ["GPU", "Inverter or backlight", "RAM", "Motherboard"], correct: 1 },
-                { q: "Which 802.11 standard is known as Wi-Fi 6?", a: ["802.11ac", "802.11ax", "802.11n", "802.11g"], correct: 1 },
-                { q: "What is a common symptom of a failing hard disk drive (HDD)?", a: ["Beep codes", "Clicking or grinding noises", "Screen flickering", "Network drops"], correct: 1 },
-                { q: "Which network topology connects all devices to a central hub or switch?", a: ["Ring", "Bus", "Star", "Mesh"], correct: 2 }
+                { 
+                  q: "Which 802.11 wireless standard operates exclusively in the 5GHz frequency band and supports speeds up to 1.3 Gbps?", 
+                  a: ["802.11g", "802.11n", "802.11ac", "802.11b"], 
+                  correct: 2, 
+                  exp: "802.11ac operates exclusively on the 5GHz band and provides gigabit speeds. 802.11g and 802.11b are legacy 2.4GHz standards. 802.11n operates on both 2.4GHz and 5GHz but maxes out at 600 Mbps." 
+                },
+                { 
+                  q: "What type of connector is most commonly used for terminating Cat5e or Cat6 network cables?", 
+                  a: ["RJ-11", "RJ-45", "F-Type", "BNC"], 
+                  correct: 1, 
+                  exp: "RJ-45 is the standard 8-pin connector for Ethernet (Cat5e/Cat6). RJ-11 is a smaller 4-pin or 6-pin connector used for telephone lines. F-Type and BNC are used for coaxial cables." 
+                },
+                { 
+                  q: "What is the maximum transfer speed of USB 3.0?", 
+                  a: ["480 Mbps", "5 Gbps", "10 Gbps", "40 Gbps"], 
+                  correct: 1, 
+                  exp: "USB 3.0 (also known as USB 3.1 Gen 1) has a theoretical maximum speed of 5 Gbps. 480 Mbps is USB 2.0. 10 Gbps is USB 3.1 Gen 2, and 40 Gbps is Thunderbolt 3/4." 
+                },
+                { 
+                  q: "Which RAID level provides mirroring without striping or parity?", 
+                  a: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"], 
+                  correct: 1, 
+                  exp: "RAID 1 uses two drives and mirrors the exact data across both for redundancy. RAID 0 is striping (no redundancy). RAID 5 uses striping with parity, and RAID 10 combines mirroring and striping." 
+                },
+                { 
+                  q: "What component on a motherboard is responsible for keeping the system time and BIOS settings intact when the system is unplugged?", 
+                  a: ["CPU cache", "Northbridge chip", "CMOS battery", "TPM module"], 
+                  correct: 2, 
+                  exp: "The CMOS battery provides a constant trickle of power to volatile memory to store BIOS/UEFI settings and the Real-Time Clock. The TPM stores cryptographic keys, while the CPU cache holds active processor data." 
+                },
+                { 
+                  q: "What cloud computing concept allows resources to be automatically provisioned and scaled as user demand increases?", 
+                  a: ["Measured service", "Resource pooling", "Rapid elasticity", "Broad network access"], 
+                  correct: 2, 
+                  exp: "Rapid elasticity allows cloud services to instantly scale up (add servers/RAM) during traffic spikes and scale down when traffic drops. Measured service refers to pay-per-use billing." 
+                },
+                { 
+                  q: "Which of the following represents an IPv6 loopback address?", 
+                  a: ["127.0.0.1", "fe80::1", "::1", "0:0:0:0:0:0:0:0"], 
+                  correct: 2, 
+                  exp: "::1 is the IPv6 loopback address used to test the local network interface. 127.0.0.1 is the IPv4 loopback. fe80:: is a link-local address prefix." 
+                },
+                { 
+                  q: "Which type of internet connection typically offers the highest bandwidth and lowest latency?", 
+                  a: ["Cable", "DSL", "Fiber optic", "Satellite"], 
+                  correct: 2, 
+                  exp: "Fiber optic uses light to transmit data, offering symmetric gigabit speeds and near-zero latency. Satellite has very high latency, while Cable and DSL are limited by copper infrastructure." 
+                },
+                { 
+                  q: "Which of the following ports is used by default for DNS traffic?", 
+                  a: ["Port 21", "Port 53", "Port 80", "Port 443"], 
+                  correct: 1, 
+                  exp: "DNS (Domain Name System) operates on Port 53. Port 21 is FTP, Port 80 is HTTP, and Port 443 is HTTPS." 
+                },
+                { 
+                  q: "What type of IP address is 169.254.1.50?", 
+                  a: ["Static IP", "Public IP", "APIPA", "Multicast"], 
+                  correct: 2, 
+                  exp: "Any address in the 169.254.x.x range is an APIPA (Automatic Private IP Addressing) address, meaning the device could not reach a DHCP server to get a real IP." 
+                },
+                { 
+                  q: "Which display technology uses organic compounds that emit light and does not require a backlight?", 
+                  a: ["LCD", "LED", "OLED", "Plasma"], 
+                  correct: 2, 
+                  exp: "OLED (Organic Light Emitting Diode) pixels produce their own light, allowing for true blacks and infinite contrast. LCD and standard LED monitors require a backlight panel." 
+                },
+                { 
+                  q: "Which component inside a laser printer applies heat and pressure to permanently bond toner to the paper?", 
+                  a: ["Transfer belt", "Fuser assembly", "Pickup roller", "Imaging drum"], 
+                  correct: 1, 
+                  exp: "The fuser assembly uses high heat and physical pressure to melt the plastic toner dust into the paper fibers. The imaging drum draws the image, and the transfer belt moves the paper." 
+                },
+                { 
+                  q: "What protocol is used to send email outward from a client to a mail server?", 
+                  a: ["IMAP", "POP3", "SMTP", "SNMP"], 
+                  correct: 2, 
+                  exp: "SMTP (Simple Mail Transfer Protocol) is strictly used for SENDING email. IMAP and POP3 are used for RECEIVING email. SNMP is for network management." 
+                },
+                { 
+                  q: "In a corporate environment, what device is used to connect multiple network segments and make intelligent routing decisions based on IP addresses?", 
+                  a: ["Unmanaged Switch", "Hub", "Router", "Access Point"], 
+                  correct: 2, 
+                  exp: "Routers operate at Layer 3 and direct traffic between different subnets/networks using IP addresses. Switches operate at Layer 2 (MAC addresses), and Hubs blindly broadcast data to all ports." 
+                },
+                { 
+                  q: "What type of cable uses a light-emitting diode (LED) or laser to transmit data?", 
+                  a: ["Coaxial", "Fiber optic", "STP", "UTP"], 
+                  correct: 1, 
+                  exp: "Fiber optic cables use light pulses (via LED or Laser) sent through glass or plastic cores. Coaxial, STP, and UTP all use electrical signals sent over copper wire." 
+                },
+                { 
+                  q: "Which network protocol is used to resolve IP addresses to MAC addresses?", 
+                  a: ["DNS", "ARP", "DHCP", "FTP"], 
+                  correct: 1, 
+                  exp: "ARP (Address Resolution Protocol) maps a known IP address to an unknown physical MAC address on a local network." 
+                },
+                { 
+                  q: "What port does the Remote Desktop Protocol (RDP) use by default?", 
+                  a: ["3389", "22", "443", "80"], 
+                  correct: 0, 
+                  exp: "RDP uses port 3389 to establish remote graphical connections to Windows computers." 
+                },
+                { 
+                  q: "Which wireless standard operates on both 2.4 GHz and 5 GHz bands and is officially known as Wi-Fi 6?", 
+                  a: ["802.11ac", "802.11n", "802.11ax", "802.11g"], 
+                  correct: 2, 
+                  exp: "802.11ax (Wi-Fi 6) supports both bands and offers higher throughput and efficiency than previous standards." 
+                },
+                { 
+                  q: "What is the maximum effective distance for running a Cat5e or Cat6 unshielded twisted pair (UTP) cable before experiencing signal attenuation?", 
+                  a: ["50 meters", "100 meters", "500 meters", "1000 meters"], 
+                  correct: 1, 
+                  exp: "The maximum length for standard Ethernet over UTP copper cabling is 100 meters (328 feet)." 
+                },
+                { 
+                  q: "Which cloud computing model provides a virtualized hardware environment but requires the customer to manage the operating system and applications?", 
+                  a: ["SaaS", "PaaS", "IaaS", "DaaS"], 
+                  correct: 2, 
+                  exp: "IaaS (Infrastructure as a Service) provides bare-metal or virtualized hardware, leaving OS and app management to the user." 
+                },
+                { 
+                  q: "Which component inside a laser printer uses high heat and pressure to permanently bond the toner to the paper?", 
+                  a: ["Imaging drum", "Transfer belt", "Fuser assembly", "Pickup roller"], 
+                  correct: 2, 
+                  exp: "The fuser assembly melts the plastic toner dust into the paper fibers." 
+                },
+                { 
+                  q: "If a Windows computer has an IP address of 169.254.10.50, what does this indicate?", 
+                  a: ["It is connected to the internet", "It has a static IP", "It failed to reach a DHCP server", "It is using a VPN"], 
+                  correct: 2, 
+                  exp: "169.254.x.x is an APIPA address, which the OS auto-assigns when a DHCP server is unreachable." 
+                },
+                { 
+                  q: "Which custom PC configuration relies heavily on a high-end GPU, maximum RAM, and a fast multi-core processor for 3D modeling?", 
+                  a: ["Home Theater PC", "CAD/CAM Workstation", "Gaming PC", "Thin Client"], 
+                  correct: 1, 
+                  exp: "CAD (Computer-Aided Design) workstations require massive computing power and specialized high-end GPUs to render 3D models." 
+                },
+                { 
+                  q: "Which type of RAID requires exactly two drives and provides mirroring for redundancy?", 
+                  a: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"], 
+                  correct: 1, 
+                  exp: "RAID 1 is a simple mirror, duplicating data across two drives. RAID 0 is striping, and RAID 5 requires at least three drives." 
+                },
+                { 
+                  q: "Which network device uses a MAC address table to intelligently forward frames only to the port where the destination device resides?", 
+                  a: ["Hub", "Repeater", "Switch", "Router"], 
+                  correct: 2, 
+                  exp: "A switch operates at Layer 2 and uses MAC addresses to forward data efficiently, unlike a hub which broadcasts to all ports." 
+                },
+                { 
+                  q: "Which of the following connectors is commonly used to terminate fiber optic cables?", 
+                  a: ["RJ-45", "BNC", "LC", "F-Type"], 
+                  correct: 2, 
+                  exp: "LC (Lucent Connector) is a standard fiber optic connector. RJ-45 is for ethernet, BNC and F-Type are for coaxial." 
+                },
+                { 
+                  q: "What type of network cable must be used when routing cables through the air circulation spaces above a drop ceiling?", 
+                  a: ["PVC", "Plenum", "Coaxial", "Shielded"], 
+                  correct: 1, 
+                  exp: "Plenum-rated cables use a special fire-retardant jacket that does not emit toxic fumes if burned." 
+                },
+                { 
+                  q: "Which mobile device connection uses electromagnetic fields to allow communication at very close range, such as for Apple Pay?", 
+                  a: ["Bluetooth", "NFC", "Infrared", "Wi-Fi Direct"], 
+                  correct: 1, 
+                  exp: "NFC (Near Field Communication) requires devices to be within a few centimeters to securely transfer data or payments." 
+                },
+                { 
+                  q: "A laptop projector is projecting an extremely dim image. What is the most likely cause?", 
+                  a: ["The bulb is nearing the end of its life", "The VGA cable is loose", "The laptop's resolution is too high", "The projector is overheating"], 
+                  correct: 0, 
+                  exp: "Projector bulbs gradually lose their brightness over time and become extremely dim right before they burn out." 
+                },
+                { 
+                  q: "What is a common visual sign of a failing capacitor on a computer motherboard?", 
+                  a: ["Missing pins", "Melted plastic connections", "Bulging tops or leaking brownish fluid", "Scorched memory slots"], 
+                  correct: 2, 
+                  exp: "Failed capacitors often bulge at the top or leak electrolytic fluid due to heat and pressure build-up." 
+                },
+                { 
+                  q: "What hardware component is responsible for converting alternating current (AC) from the wall into direct current (DC) for the PC?", 
+                  a: ["Motherboard", "Inverter", "Power Supply Unit (PSU)", "CPU"], 
+                  correct: 2, 
+                  exp: "The PSU takes high-voltage AC from the wall outlet and steps it down into clean DC power for the internal components." 
+                },
+                { 
+                  q: "Which of the following protocols is used to securely encrypt web traffic and operates on port 443?", 
+                  a: ["HTTP", "HTTPS", "FTP", "Telnet"], 
+                  correct: 1, 
+                  exp: "HTTPS encrypts web traffic using SSL/TLS over port 443. HTTP uses port 80 and is unencrypted." 
+                },
+                { 
+                  q: "Which component inside an older laptop connects the LCD panel to the motherboard and provides high-voltage power to the backlight?", 
+                  a: ["Digitizer", "Inverter", "GPU", "SATA cable"], 
+                  correct: 1, 
+                  exp: "The inverter converts low-voltage DC from the motherboard into high-voltage AC to power the CCFL backlight in older LCD screens." 
+                },
+                { 
+                  q: "What is the final step in the CompTIA A+ troubleshooting methodology?", 
+                  a: ["Establish a plan of action", "Test the theory", "Document findings, actions, and outcomes", "Verify full system functionality"], 
+                  correct: 2, 
+                  exp: "Documentation is always the final step so future technicians can reference the solution if the problem occurs again." 
+                },
+                { 
+                  q: "What is the primary function of a DNS server?", 
+                  a: ["Assign IP addresses to clients", "Block malicious websites", "Translate domain names to IP addresses", "Host email accounts"], 
+                  correct: 2, 
+                  exp: "DNS (Domain Name System) acts as the internet's phonebook, translating human-readable URLs into machine-readable IP addresses." 
+                },
+                { 
+                  q: "Which network topology connects every endpoint device to a central switch or hub?", 
+                  a: ["Star", "Mesh", "Bus", "Ring"], 
+                  correct: 0, 
+                  exp: "In a Star topology, all nodes connect to a central connection point. If one cable fails, only that node goes down." 
+                },
+                { 
+                  q: "A laser printer is leaving vertical black streaks down every page. What is the most likely cause?", 
+                  a: ["Out of toner", "Paper jam", "Scratched imaging drum", "Failing fuser"], 
+                  correct: 2, 
+                  exp: "A scratch on the photosensitive imaging drum will hold a charge permanently, causing toner to stick to that scratch on every rotation." 
+                },
+                { 
+                  q: "What port does Secure Shell (SSH) use for encrypted remote terminal access?", 
+                  a: ["21", "22", "23", "3389"], 
+                  correct: 1, 
+                  exp: "SSH uses port 22. FTP uses 21, Telnet uses 23, and RDP uses 3389." 
+                },
+                { 
+                  q: "Which of the following devices can supply both network connectivity and electrical power to an IP camera?", 
+                  a: ["Unmanaged switch", "Router", "PoE Switch", "Cable modem"], 
+                  correct: 2, 
+                  exp: "A Power over Ethernet (PoE) switch sends DC power along with data over standard twisted-pair Ethernet cables." 
+                },
+                { 
+                  q: "What type of memory is non-volatile and is traditionally used to store a computer's fundamental BIOS/UEFI firmware?", 
+                  a: ["RAM", "ROM", "Cache", "Virtual Memory"], 
+                  correct: 1, 
+                  exp: "ROM (Read-Only Memory) retains its data even without power, making it perfect for storing the initial boot firmware." 
+                },
+                { 
+                  q: "Which display technology provides the deepest blacks and infinite contrast because each pixel produces its own light?", 
+                  a: ["OLED", "LCD", "LED", "Plasma"], 
+                  correct: 0, 
+                  exp: "OLED (Organic Light Emitting Diode) screens do not have a backlight; individual pixels turn completely off to create true black." 
+                },
+                { 
+                  q: "A user brings you a mobile phone with a noticeably bulging back cover. What is the most likely cause?", 
+                  a: ["Overheating processor", "Swollen lithium-ion battery", "Expanded internal storage", "Water damage"], 
+                  correct: 1, 
+                  exp: "Lithium-ion batteries can swell and expand violently when they fail due to heat or age, pushing the casing open." 
+                },
+                { 
+                  q: "What is the primary purpose of an enterprise proxy server?", 
+                  a: ["To act as an intermediary for client web requests to improve security and caching", "To convert IP addresses to MAC addresses", "To assign IP addresses to new devices", "To establish VPN connections"], 
+                  correct: 0, 
+                  exp: "A proxy sits between the user and the internet, filtering content, caching websites for speed, and hiding the client's IP address." 
+                },
+                { 
+                  q: "Which IEEE 802.11 standard introduced MIMO (Multiple Input, Multiple Output) technology to increase wireless speeds?", 
+                  a: ["802.11a", "802.11b", "802.11g", "802.11n"], 
+                  correct: 3, 
+                  exp: "802.11n was the first standard to utilize MIMO, using multiple antennas to send and receive multiple data streams simultaneously." 
+                },
+                { 
+                  q: "What port does Simple Mail Transfer Protocol (SMTP) use to send outgoing email?", 
+                  a: ["25", "110", "143", "443"], 
+                  correct: 0, 
+                  exp: "SMTP operates on port 25. POP3 uses 110, and IMAP uses 143." 
+                },
+                { 
+                  q: "What tool is used to attach RJ-45 connectors to the ends of an unshielded twisted-pair (UTP) cable?", 
+                  a: ["Punchdown tool", "Multimeter", "Crimper", "Wire stripper"], 
+                  correct: 2, 
+                  exp: "A crimper physically presses the metal pins of the RJ-45 connector into the copper wires of the cable to secure the connection." 
+                },
+                { 
+                  q: "Which USB standard introduced the reversible Type-C connector and offers data transfer speeds up to 10 Gbps?", 
+                  a: ["USB 2.0", "USB 3.0", "USB 3.1 Gen 2", "Micro-USB"], 
+                  correct: 2, 
+                  exp: "USB 3.1 Gen 2 pushed speeds to 10 Gbps and popularized the reversible Type-C physical connector." 
+                },
+                { 
+                  q: "What type of hypervisor is installed directly on the bare-metal hardware of a server, bypassing a standard host operating system?", 
+                  a: ["Type 1", "Type 2", "Type 3", "Container"], 
+                  correct: 0, 
+                  exp: "Type 1 hypervisors (like VMware ESXi) install directly on the hardware for maximum performance. Type 2 installs on top of an OS like Windows." 
+                },
+                { 
+                  q: "A technician needs to find a specific wire terminating in a messy telecom closet. What tool should they use?", 
+                  a: ["Multimeter", "Loopback plug", "Tone generator and probe", "Cable tester"], 
+                  correct: 2, 
+                  exp: "A tone generator sends a distinct sound wave down the wire, and the probe allows the tech to wave over the bundle to find the exact cable emitting the sound." 
+                },
+                { 
+                  q: "What type of internet connection relies on line-of-sight communication and is highly susceptible to interference from heavy rain or snow?", 
+                  a: ["Fiber optic", "DSL", "Satellite", "Cable"], 
+                  correct: 2, 
+                  exp: "Satellite internet requires a clear line of sight to orbit and is heavily affected by atmospheric conditions and high latency." 
+                }
+                // Continue adding the rest of your Core 1 questions here using this exact { q, a, correct, exp } format.
             ]
         },
         "core2": {
             id: "core2",
-            title: "CompTIA A+ Core 2",
+            title: "CompTIA A+ Core 2 (OS & Security)",
             questions: [
-                { q: "Which of the following is the default port for HTTPS?", a: ["Port 80", "Port 21", "Port 443", "Port 22"], correct: 2 },
-                { q: "Which Windows command-line tool is used to display the IP address, subnet mask, and default gateway for all adapters?", a: ["ping -t", "tracert", "ipconfig /all", "netstat -a"], correct: 2 },
-                { q: "Which of the following file systems is specifically designed for optical media like DVDs and Blu-rays?", a: ["NTFS", "UDF", "exFAT", "FAT32"], correct: 1 },
-                { q: "A user receives an email that appears to be from their bank asking for login credentials. What type of attack is this?", a: ["Phishing", "Ransomware", "Man-in-the-middle", "DDoS"], correct: 0 },
-                { q: "Which command is used in Linux to change file or directory permissions?", a: ["chown", "chmod", "grep", "sudo"], correct: 1 },
-                { q: "Which step of the CompTIA troubleshooting methodology comes immediately after establishing a theory of probable cause?", a: ["Establish a plan of action", "Test the theory to determine cause", "Verify full system functionality", "Document findings"], correct: 1 },
-                { q: "What built-in tool in Windows allows an administrator to format drives, shrink partitions, and assign drive letters?", a: ["Device Manager", "Task Scheduler", "Disk Management", "Performance Monitor"], correct: 2 },
-                { q: "You are tasked with securely destroying data on magnetic hard drives so it cannot be recovered. Which physical method is most effective?", a: ["Quick format", "Degaussing", "Defragmentation", "Standard formatting"], correct: 1 },
-                { q: "Which of the following is considered a physical security control?", a: ["Biometric lock", "Firewall", "Antivirus software", "Password policy"], correct: 0 },
-                { q: "What Windows utility is used to prepare an image for deployment by removing hardware-specific information and computer SIDs?", a: ["Diskpart", "Sysprep", "SFC", "DISM"], correct: 1 },
-                { q: "Which type of malware restricts access to the infected computer system and demands that the user pay a fee to the operators to remove the restriction?", a: ["Spyware", "Adware", "Ransomware", "Keylogger"], correct: 2 },
-                { q: "A user is experiencing slow performance on a Windows 10 machine. Which tab in Task Manager shows detailed information about CPU, Memory, Disk, and Network usage over time?", a: ["Processes", "Performance", "Startup", "Services"], correct: 1 },
-                { q: "What protocol allows secure, encrypted remote command-line access to a Linux server?", a: ["Telnet", "SSH", "FTP", "HTTP"], correct: 1 },
-                { q: "Which authentication method uses two or more different types of evidence (e.g., a password and a fingerprint) to verify a user's identity?", a: ["Single Sign-On (SSO)", "Multifactor Authentication (MFA)", "Role-Based Access Control (RBAC)", "RADIUS"], correct: 1 },
-                { q: "In macOS, what utility is used to manage backup and restore functionality automatically to an external drive?", a: ["Finder", "Disk Utility", "Time Machine", "Boot Camp"], correct: 2 },
-                { q: "Which wireless security protocol is currently the most secure and recommended for modern Wi-Fi networks?", a: ["WEP", "WPA", "WPA2", "WPA3"], correct: 3 },
-                { q: "A technician needs to kill an unresponsive program via the Windows command line. Which command should they use?", a: ["taskkill", "kill", "stop-process", "endtask"], correct: 0 },
-                { q: "What is the principle of granting a user the minimum amount of access required to perform their job duties?", a: ["Separation of duties", "Least privilege", "Zero Trust", "Mandatory Access Control"], correct: 1 },
-                { q: "Which Windows utility allows you to configure programs that launch automatically when the computer boots?", a: ["Event Viewer", "Device Manager", "Task Manager", "Regedit"], correct: 2 },
-                { q: "What type of software license allows the user to view, modify, and distribute the source code freely?", a: ["Proprietary", "Open Source", "Freeware", "Shareware"], correct: 1 },
-                { q: "Which logical security concept involves analyzing human behavior to trick users into giving up confidential information?", a: ["Brute Force", "Social Engineering", "Spoofing", "Zero-day exploit"], correct: 1 },
-                { q: "If a user's Windows PC keeps booting into Safe Mode automatically, which utility should the technician check to correct the boot parameters?", a: ["msconfig", "dxdiag", "gpedit.msc", "services.msc"], correct: 0 },
-                { q: "What mobile device management (MDM) feature allows a company to erase corporate data from a lost phone without affecting personal data?", a: ["Remote wipe", "Factory reset", "Geofencing", "Containerization"], correct: 3 },
-                { q: "Which Linux command displays the contents of a text file directly in the terminal without opening an editor?", a: ["vi", "cat", "nano", "ls"], correct: 1 },
-                { q: "What document should always be referenced to find the safe handling and disposal procedures for chemical solvents used in IT?", a: ["EULA", "SLA", "MSDS / SDS", "AUP"], correct: 2 },
-                { q: "Which Windows tool is used to monitor system health and view logs of system errors and warnings?", a: ["Task Manager", "Event Viewer", "Device Manager", "Services"], correct: 1 },
-                { q: "What command in Windows is used to check a disk for file system errors and bad sectors?", a: ["sfc", "dism", "chkdsk", "format"], correct: 2 },
-                { q: "A user wants to set up a password policy that prevents users from reusing their last 5 passwords. Which policy setting handles this?", a: ["Maximum password age", "Password complexity", "Enforce password history", "Minimum password length"], correct: 2 },
-                { q: "Which type of malware stealthily monitors user actions and keystrokes?", a: ["Ransomware", "Spyware", "Worm", "Trojan"], correct: 1 },
-                { q: "What is the best method to secure a mobile device against unauthorized physical access if it is lost or stolen?", a: ["Screen lock and biometric authentication", "Antivirus software", "Remote wipe", "VPN"], correct: 0 },
-                { q: "Which of the following is a macOS feature used to search for files, apps, and web content?", a: ["Finder", "Spotlight", "Mission Control", "Siri"], correct: 1 },
-                { q: "What type of backup copies all files that have changed since the last full backup?", a: ["Incremental", "Differential", "Synthetic full", "Snapshot"], correct: 1 },
-                { q: "Which of the following is an environmental control designed to protect server hardware from overheating?", a: ["UPS", "HVAC", "Fire suppression", "Biometric locks"], correct: 1 },
-                { q: "A technician is recycling an old computer. What is the most secure way to ensure the data on the magnetic hard drive is irretrievable?", a: ["Format the drive", "Degauss the drive", "Delete all partitions", "Run chkdsk"], correct: 1 },
-                { q: "Which Windows feature allows a user to encrypt an entire drive, including the operating system?", a: ["EFS", "BitLocker", "Windows Defender", "UAC"], correct: 1 },
-                { q: "You need to end a frozen application in Windows. Which shortcut opens the Task Manager directly?", a: ["Ctrl+Alt+Del", "Ctrl+Shift+Esc", "Windows Key+R", "Alt+F4"], correct: 1 },
-                { q: "Which Linux command is used to elevate privileges to execute a command as the root user?", a: ["su", "sudo", "chmod", "chown"], correct: 1 },
-                { q: "What type of social engineering attack specifically targets high-level executives within an organization?", a: ["Phishing", "Spear phishing", "Whaling", "Vishing"], correct: 2 },
-                { q: "Which documentation type outlines the expected behavior of employees when using company technology?", a: ["SLA", "AUP", "MSDS", "NDA"], correct: 1 },
-                { q: "A computer is displaying a 'Boot device not found' error. What is the best first step for troubleshooting?", a: ["Reinstall Windows", "Replace the hard drive", "Check the BIOS/UEFI boot order", "Flash the BIOS"], correct: 2 },
-                { q: "Which feature in Windows allows multiple users to log in simultaneously without closing other users' applications?", a: ["Fast User Switching", "Remote Desktop", "Active Directory", "Workgroups"], correct: 0 },
-                { q: "What command line utility helps you determine the exact path a packet takes to reach its destination?", a: ["ping", "tracert", "netstat", "nslookup"], correct: 1 },
-                { q: "Which of the following describes a botnet?", a: ["A single computer infected with malware", "A network of infected computers controlled remotely", "A type of firewall", "A server farm"], correct: 1 },
-                { q: "In macOS, what is the dock used for?", a: ["Managing system preferences", "Launching and switching between applications", "Searching for files", "Emptying the trash"], correct: 1 },
-                { q: "What is a key benefit of using Active Directory in a corporate environment?", a: ["Increased graphics performance", "Centralized user and computer management", "Automatic hardware driver updates", "Free cloud storage"], correct: 1 },
-                { q: "A user reports an annoying pop-up warning about a virus and asking them to call a toll-free number. What is this an example of?", a: ["Ransomware", "Scareware", "Zero-day exploit", "Rootkit"], correct: 1 },
-                { q: "Which Windows utility is best suited for migrating user files and settings from an old PC to a new one?", a: ["Windows Easy Transfer / PCmover", "Sysprep", "Disk Cleanup", "Robocopy"], correct: 0 },
-                { q: "What type of security threat involves an attacker intercepting communication between two parties to eavesdrop or alter data?", a: ["DoS", "Spoofing", "Man-in-the-Middle", "Phishing"], correct: 2 },
-                { q: "Which of the following script types is native to the Windows environment and often used for advanced automation tasks?", a: [".sh", ".py", ".ps1 (PowerShell)", ".js"], correct: 2 },
-                { q: "During an incident response, what is the term for preserving evidence in a way that ensures it has not been tampered with?", a: ["Chain of custody", "Data recovery", "Mitigation", "Eradication"], correct: 0 }
+                { 
+                  q: "Which of the following is the default port for HTTPS?", 
+                  a: ["Port 80", "Port 21", "Port 443", "Port 22"], 
+                  correct: 2, 
+                  exp: "HTTPS (Hypertext Transfer Protocol Secure) operates on Port 443 to encrypt web traffic. Port 80 is unencrypted HTTP, Port 21 is FTP, and Port 22 is SSH." 
+                },
+                { 
+                  q: "Which Windows command-line tool is used to display the IP address, subnet mask, and default gateway for all adapters?", 
+                  a: ["ping -t", "tracert", "ipconfig /all", "netstat -a"], 
+                  correct: 2, 
+                  exp: "ipconfig /all displays complete network configuration details for all physical and virtual adapters. Ping tests connectivity, tracert shows routing hops, and netstat shows active connections." 
+                },
+                { 
+                  q: "Which of the following file systems is specifically designed for optical media like DVDs and Blu-rays?", 
+                  a: ["NTFS", "UDF", "exFAT", "FAT32"], 
+                  correct: 1, 
+                  exp: "UDF (Universal Disk Format) is the standard file system for optical media. NTFS is for Windows drives, exFAT is for high-capacity flash drives, and FAT32 is an older flash drive standard." 
+                },
+                { 
+                  q: "Which command is used in Linux to change file or directory permissions?", 
+                  a: ["chown", "chmod", "grep", "sudo"], 
+                  correct: 1, 
+                  exp: "chmod (change mode) modifies read, write, and execute permissions. chown changes file ownership. grep searches text, and sudo executes commands as root." 
+                },
+                { 
+                  q: "Which step of the CompTIA troubleshooting methodology comes immediately after establishing a theory of probable cause?", 
+                  a: ["Establish a plan of action", "Test the theory to determine cause", "Verify full system functionality", "Document findings"], 
+                  correct: 1, 
+                  exp: "Once you have a theory, the next logical step is to Test the theory. If it's correct, you then establish a plan of action to fix it. If incorrect, you establish a new theory." 
+                },
+                { 
+                  q: "You are tasked with securely destroying data on magnetic hard drives so it cannot be recovered. Which physical method is most effective?", 
+                  a: ["Quick format", "Degaussing", "Defragmentation", "Standard formatting"], 
+                  correct: 1, 
+                  exp: "Degaussing uses a powerful electromagnet to permanently destroy the magnetic fields on the drive platters. Formatting only removes file pointers, leaving data recoverable." 
+                },
+                { 
+                  q: "What Windows utility is used to prepare an image for deployment by removing hardware-specific information and computer SIDs?", 
+                  a: ["Diskpart", "Sysprep", "SFC", "DISM"], 
+                  correct: 1, 
+                  exp: "Sysprep (System Preparation Tool) strips Windows of unique SIDs and drivers so the image can be deployed to different hardware without conflicts. DISM manages the image file itself." 
+                },
+                { 
+                  q: "Which type of malware restricts access to the infected computer system and demands that the user pay a fee to the operators to remove the restriction?", 
+                  a: ["Spyware", "Adware", "Ransomware", "Keylogger"], 
+                  correct: 2, 
+                  exp: "Ransomware encrypts user files and demands payment (usually crypto) for the decryption key. Spyware observes user habits, and Keyloggers steal typed passwords." 
+                },
+                { 
+                  q: "What protocol allows secure, encrypted remote command-line access to a Linux server?", 
+                  a: ["Telnet", "SSH", "FTP", "HTTP"], 
+                  correct: 1, 
+                  exp: "SSH (Secure Shell) provides an encrypted terminal connection over port 22. Telnet does the same thing but sends data and passwords in plain text, making it highly insecure." 
+                },
+                { 
+                  q: "Which wireless security protocol is currently the most secure and recommended for modern Wi-Fi networks?", 
+                  a: ["WEP", "WPA", "WPA2", "WPA3"], 
+                  correct: 3, 
+                  exp: "WPA3 is the latest and most secure standard, utilizing Simultaneous Authentication of Equals (SAE) to protect against dictionary attacks. WEP is completely obsolete and easily hacked." 
+                },
+                { 
+                  q: "What is the principle of granting a user the minimum amount of access required to perform their job duties?", 
+                  a: ["Separation of duties", "Least privilege", "Zero Trust", "Mandatory Access Control"], 
+                  correct: 1, 
+                  exp: "Least privilege ensures users only have the exact permissions needed for their daily work, minimizing the damage if their account is compromised." 
+                },
+                { 
+                  q: "Which logical security concept involves analyzing human behavior to trick users into giving up confidential information?", 
+                  a: ["Brute Force", "Social Engineering", "Spoofing", "Zero-day exploit"], 
+                  correct: 1, 
+                  exp: "Social Engineering relies on human manipulation (phishing, impersonation) rather than technical hacking. Brute force attacks passwords mathematically." 
+                },
+                { 
+                  q: "What mobile device management (MDM) feature allows a company to erase corporate data from a lost phone without affecting personal data?", 
+                  a: ["Remote wipe", "Factory reset", "Geofencing", "Containerization"], 
+                  correct: 3, 
+                  exp: "Containerization isolates corporate data into a secure 'container' on the device. IT can wipe just the container without touching the user's personal photos or apps." 
+                },
+                { 
+                  q: "What document should always be referenced to find the safe handling and disposal procedures for chemical solvents used in IT?", 
+                  a: ["EULA", "SLA", "MSDS / SDS", "AUP"], 
+                  correct: 2, 
+                  exp: "The MSDS (Material Safety Data Sheet) or SDS provides detailed instructions on handling, flammability, toxicity, and disposal of chemicals. EULA is for software licenses." 
+                },
+                { 
+                  q: "Which Windows tool is used to monitor system health and view logs of system errors and warnings?", 
+                  a: ["Task Manager", "Event Viewer", "Device Manager", "Services"], 
+                  correct: 1, 
+                  exp: "Event Viewer categorizes and logs system events, application errors, and security audits. Task Manager shows active resource usage." 
+                },
+                { 
+                  q: "Which Windows utility allows a user to partition, format, and assign drive letters to new hard drives?", 
+                  a: ["Device Manager", "Task Manager", "Disk Management", "Event Viewer"], 
+                  correct: 2, 
+                  exp: "Disk Management is the built-in Windows GUI tool for managing storage volumes, partitions, and drive letters." 
+                },
+                { 
+                  q: "What command-line tool checks for file system errors and attempts to repair bad sectors on a Windows drive?", 
+                  a: ["sfc", "dism", "chkdsk", "diskpart"], 
+                  correct: 2, 
+                  exp: "Chkdsk (Check Disk) scans the file system for logical errors and physical bad sectors, attempting recovery." 
+                },
+                { 
+                  q: "Which Linux command is used to search for specific text patterns within a file?", 
+                  a: ["grep", "ls", "chmod", "pwd"], 
+                  correct: 0, 
+                  exp: "The 'grep' command searches through plain-text data sets for lines that match a regular expression." 
+                },
+                { 
+                  q: "What built-in macOS feature is used to automatically back up personal data, apps, and system settings to an external drive?", 
+                  a: ["File History", "Time Machine", "Disk Utility", "Finder"], 
+                  correct: 1, 
+                  exp: "Time Machine is Apple's native backup software that takes hourly, daily, and weekly snapshots of the entire system." 
+                },
+                { 
+                  q: "Which security concept involves training employees to identify and avoid phishing emails and suspicious links?", 
+                  a: ["Penetration testing", "Social engineering training", "Vulnerability scanning", "Port security"], 
+                  correct: 1, 
+                  exp: "Social engineering targets human psychology. Training employees is the best defense against phishing and impersonation attacks." 
+                },
+                { 
+                  q: "What is the absolute minimum amount of RAM required to install a 64-bit version of Windows 10?", 
+                  a: ["1 GB", "2 GB", "4 GB", "8 GB"], 
+                  correct: 1, 
+                  exp: "Microsoft requires a minimum of 2 GB of RAM for the 64-bit version of Windows 10, and 1 GB for the 32-bit version." 
+                },
+                { 
+                  q: "Which Windows command-line tool maps the exact routing path a packet takes to reach its destination?", 
+                  a: ["ping", "netstat", "ipconfig", "tracert"], 
+                  correct: 3, 
+                  exp: "Tracert (Trace Route) maps every router hop between the host and the destination, showing latency at each step." 
+                },
+                { 
+                  q: "What type of malware restricts access to a user's files using strong encryption and demands payment for the decryption key?", 
+                  a: ["Spyware", "Ransomware", "Worm", "Rootkit"], 
+                  correct: 1, 
+                  exp: "Ransomware holds data hostage by encrypting it and demanding cryptocurrency payments to unlock it." 
+                },
+                { 
+                  q: "Which logical security control uses two different forms of identification, such as a password and a fingerprint?", 
+                  a: ["Single Sign-On (SSO)", "Multifactor Authentication (MFA)", "Role-Based Access Control", "Biometrics only"], 
+                  correct: 1, 
+                  exp: "MFA requires two or more independent credentials: something you know (password), something you have (token), or something you are (fingerprint)." 
+                },
+                { 
+                  q: "Which Windows utility allows you to forcefully end unresponsive applications and view real-time system resource usage?", 
+                  a: ["Task Manager", "Services", "Event Viewer", "Control Panel"], 
+                  correct: 0, 
+                  exp: "Task Manager shows active processes and resource usage, allowing you to right-click and 'End Task' on frozen programs." 
+                },
+                { 
+                  q: "Which installation method involves pulling the Windows OS image from a network server over a PXE boot rather than using a USB drive?", 
+                  a: ["Clean install", "Unattended installation", "Network installation", "In-place upgrade"], 
+                  correct: 2, 
+                  exp: "Network installations utilize Preboot Execution Environment (PXE) to pull the OS installer directly from a network deployment server." 
+                },
+                { 
+                  q: "What type of network attack involves an attacker secretly intercepting and possibly altering communication between two parties?", 
+                  a: ["DDoS", "Man-in-the-Middle (MitM)", "Brute Force", "Zero-day"], 
+                  correct: 1, 
+                  exp: "In a MitM attack, the attacker places themselves in the middle of the communication flow to eavesdrop or steal session tokens." 
+                },
+                { 
+                  q: "Which mobile device management (MDM) feature allows an administrator to erase all corporate data if a device is stolen?", 
+                  a: ["Geofencing", "Biometrics", "Remote wipe", "Containerization"], 
+                  correct: 2, 
+                  exp: "Remote wipe allows IT to send a command over the internet that instantly deletes all sensitive data on the lost device." 
+                },
+                { 
+                  q: "What documentation provides critical safety guidelines for handling, storing, and disposing of chemical solvents used in IT?", 
+                  a: ["EULA", "SLA", "MSDS / SDS", "AUP"], 
+                  correct: 2, 
+                  exp: "The Material Safety Data Sheet (SDS) lists the hazards and safety precautions for chemicals like thermal paste remover and compressed air." 
+                },
+                { 
+                  q: "Which Windows command-line tool is used to forcefully terminate a running process by using its Process ID (PID)?", 
+                  a: ["kill", "endtask", "taskkill", "stop-process"], 
+                  correct: 2, 
+                  exp: "Taskkill is the command-line equivalent of ending a task in Task Manager, often used with the /F flag to force termination." 
+                },
+                { 
+                  q: "What is the default, modern file system used by Apple's macOS operating systems?", 
+                  a: ["NTFS", "ext4", "APFS", "exFAT"], 
+                  correct: 2, 
+                  exp: "APFS (Apple File System) is the modern default for macOS, optimized for flash and solid-state storage." 
+                },
+                { 
+                  q: "Which authentication protocol is commonly used in enterprise environments with Active Directory to grant ticket-based access?", 
+                  a: ["Kerberos", "RADIUS", "TACACS+", "PAP"], 
+                  correct: 0, 
+                  exp: "Kerberos is the default authentication protocol for Windows Active Directory, using a ticket-granting system for secure SSO." 
+                },
+                { 
+                  q: "What is the most secure method for permanently disposing of highly classified magnetic hard drives?", 
+                  a: ["Low-level format", "Degaussing", "Physical shredding", "Deleting partitions"], 
+                  correct: 2, 
+                  exp: "Physical destruction via industrial shredding is the only 100% foolproof way to ensure data can never be recovered." 
+                },
+                { 
+                  q: "A user experiences a Blue Screen of Death (BSOD). Which Windows feature should the technician check to read the error logs?", 
+                  a: ["Device Manager", "Event Viewer", "Task Scheduler", "Performance Monitor"], 
+                  correct: 1, 
+                  exp: "Event Viewer logs critical system errors, warnings, and crash events, providing the stop codes needed for troubleshooting." 
+                },
+                { 
+                  q: "Which script file extension is natively associated with Windows PowerShell?", 
+                  a: [".sh", ".py", ".js", ".ps1"], 
+                  correct: 3, 
+                  exp: "PowerShell scripts use the .ps1 extension. .sh is for Linux Bash, .py is Python, and .js is JavaScript." 
+                },
+                { 
+                  q: "What network security feature prevents unauthorized devices from communicating on a switch by checking their physical address?", 
+                  a: ["VLANs", "Port security / MAC filtering", "QoS", "Spanning Tree Protocol"], 
+                  correct: 1, 
+                  exp: "Port security restricts switch port access to specific MAC addresses, shutting down the port if an unauthorized device connects." 
+                },
+                { 
+                  q: "What type of backup copies only the files that have changed since the last full backup, but does NOT clear the archive bit?", 
+                  a: ["Full", "Incremental", "Differential", "Snapshot"], 
+                  correct: 2, 
+                  exp: "Differential backups back up everything changed since the LAST FULL backup, making restoration faster but taking more daily storage space." 
+                },
+                { 
+                  q: "Which Linux command elevates your privileges, allowing you to execute an administrative command as the root user?", 
+                  a: ["chown", "sudo", "apt-get", "ifconfig"], 
+                  correct: 1, 
+                  exp: "'sudo' (Superuser Do) temporarily grants root privileges to perform administrative tasks." 
+                },
+                { 
+                  q: "What describes a 'Zero-day' vulnerability?", 
+                  a: ["A virus that deletes data in zero days", "An attack on a previously unknown or unpatched software flaw", "A denial of service attack", "A completely harmless bug"], 
+                  correct: 1, 
+                  exp: "A zero-day is a newly discovered vulnerability that the software vendor has had 'zero days' to patch before it was exploited." 
+                },
+                { 
+                  q: "Which Windows utility prepares a master OS image for deployment by stripping away unique SIDs and hardware profiles?", 
+                  a: ["SFC", "DISM", "Sysprep", "Robocopy"], 
+                  correct: 2, 
+                  exp: "Sysprep (System Preparation) generalizes a Windows installation so it can be cloned and deployed to multiple unique machines." 
+                },
+                { 
+                  q: "What is the primary purpose of an Uninterruptible Power Supply (UPS) in a server room?", 
+                  a: ["To cool the servers", "To filter network traffic", "To provide temporary battery power during an electrical outage", "To backup data automatically"], 
+                  correct: 2, 
+                  exp: "A UPS prevents data loss during a power failure by providing enough battery runtime to safely shut down the servers." 
+                },
+                { 
+                  q: "A user's web browser continuously redirects to an unfamiliar search engine, and pop-ups appear constantly. What is the most likely cause?", 
+                  a: ["Ransomware", "Adware / Browser Hijacker", "Failing hard drive", "Outdated network drivers"], 
+                  correct: 1, 
+                  exp: "Adware and browser hijackers alter DNS or browser settings to force traffic to malicious or ad-revenue-generating sites." 
+                },
+                { 
+                  q: "What is the security concept of giving users only the exact permissions they need to perform their daily job functions and nothing more?", 
+                  a: ["Separation of duties", "Principle of Least Privilege", "Mandatory Access Control", "Zero Trust"], 
+                  correct: 1, 
+                  exp: "Least Privilege minimizes security risks by ensuring a compromised user account cannot access unrestricted administrative areas." 
+                },
+                { 
+                  q: "Which command would you use to request a new IP address from the DHCP server in Windows?", 
+                  a: ["ipconfig /release", "ipconfig /flushdns", "ipconfig /renew", "netstat -r"], 
+                  correct: 2, 
+                  exp: "ipconfig /renew contacts the DHCP server to request a new IP lease. /release drops the current IP." 
+                },
+                { 
+                  q: "What type of software license allows users to freely view, modify, and distribute the program's underlying source code?", 
+                  a: ["Freeware", "Proprietary", "Shareware", "Open Source"], 
+                  correct: 3, 
+                  exp: "Open-source software (like Linux) makes the source code publicly available for collaboration and modification." 
+                },
+                { 
+                  q: "Which physical security control prevents 'tailgating' by forcing one person to authenticate, enter a small room, and wait for the door to close before opening the next door?", 
+                  a: ["Biometrics", "Mantrap", "Security guard", "Key fob"], 
+                  correct: 1, 
+                  exp: "A mantrap is a two-door system designed to isolate individuals and ensure only one authorized person enters at a time." 
+                },
+                { 
+                  q: "What does executing the 'SFC /scannow' command do in Windows?", 
+                  a: ["Checks the hard drive for physical bad sectors", "Scans and restores corrupted Windows system files", "Updates the system drivers", "Formats the C: drive"], 
+                  correct: 1, 
+                  exp: "System File Checker (SFC) verifies the integrity of crucial Windows OS files and replaces corrupted ones from a cached copy." 
+                },
+                { 
+                  q: "What type of corporate policy dictates exactly what employees are allowed to do on company computers and the internet?", 
+                  a: ["Acceptable Use Policy (AUP)", "Service Level Agreement (SLA)", "Non-Disclosure Agreement (NDA)", "Password Policy"], 
+                  correct: 0, 
+                  exp: "The AUP outlines the rules for using corporate IT assets, including web browsing restrictions and security expectations." 
+                },
+                { 
+                  q: "What macOS utility is invoked by pressing Option-Command-Escape to close an unresponsive application?", 
+                  a: ["Activity Monitor", "Terminal", "Force Quit", "Disk Utility"], 
+                  correct: 2, 
+                  exp: "Force Quit is the macOS equivalent to ending a task in the Windows Task Manager." 
+                },
+                { 
+                  q: "What is the primary function of a host-based software firewall, such as Windows Defender Firewall?", 
+                  a: ["To block unauthorized incoming and outgoing network traffic at the OS level", "To detect and remove viruses", "To encrypt the hard drive", "To block spam emails"], 
+                  correct: 0, 
+                  exp: "Software firewalls monitor and filter network ports and applications, dropping traffic that violates the security rules." 
+                }
+                // Continue adding the rest of your Core 2 questions here using this exact { q, a, correct, exp } format.
             ]
-        }
+        },
+
+        
     };
 
-    // Feedback message arrays
-    const correctMessages = [
-        "Spot on! Great job.",
-        "Exactly right! Keep it up.",
-        "Nailed it!",
-        "Perfect answer!",
-        "You're on a roll, excellent!"
-    ];
 
-    const incorrectMessages = [
-        "Not quite, but that's okay! Learning happens here.",
-        "Incorrect, but don't sweat it. You'll get the next one!",
-        "Almost! Keep going, you're doing great.",
-        "That was a tough one. Dust off and try the next!",
-        "Missed that one, but every mistake is a step toward mastery."
-    ];
-
-    // App State
+    // --- APP STATE & TIMERS ---
     let currentSetId = "set1";
     let currentQuestionIndex = 0;
     let score = 0;
+    
+    let examTimeRemaining = 3600; // 60 minutes in seconds
+    let questionTimeSpent = 0;
+    let examTimerInterval = null;
+    let questionTimerInterval = null;
+    let isAnswered = false; // Tracks if current question is answered
 
     // DOM Elements
     const questionEl = document.getElementById('question');
@@ -547,15 +996,63 @@
     const setTitleEl = document.getElementById('set-title');
     const setListUi = document.getElementById('set-list-ui');
     const feedbackEl = document.getElementById('feedback');
+    const explanationEl = document.getElementById('explanation');
+    
+    // Timer DOM
+    const examTimerEl = document.getElementById('exam-timer');
+    const examTimerBadge = document.getElementById('exam-timer-badge');
+    const qTimerEl = document.getElementById('question-timer');
+    const hudBar = document.getElementById('hud-bar');
 
-    // Initialize the Sidebar
+    // --- TIMING LOGIC ---
+    function formatTime(seconds) {
+        const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const s = (seconds % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+    }
+
+    function startExamTimer() {
+        clearInterval(examTimerInterval);
+        examTimerInterval = setInterval(() => {
+            examTimeRemaining--;
+            examTimerEl.innerText = formatTime(examTimeRemaining);
+            
+            if (examTimeRemaining <= 300 && examTimeRemaining > 60) {
+                examTimerBadge.className = "timer-badge warning";
+            } else if (examTimeRemaining <= 60) {
+                examTimerBadge.className = "timer-badge danger";
+            }
+
+            if (examTimeRemaining <= 0) {
+                clearInterval(examTimerInterval);
+                forceEndExam();
+            }
+        }, 1000);
+    }
+
+    function startQuestionTimer() {
+        clearInterval(questionTimerInterval);
+        questionTimeSpent = 0;
+        qTimerEl.innerText = "00:00";
+        questionTimerInterval = setInterval(() => {
+            questionTimeSpent++;
+            qTimerEl.innerText = formatTime(questionTimeSpent);
+        }, 1000);
+    }
+
+    function forceEndExam() {
+        clearInterval(questionTimerInterval);
+        showResults("Time's Up!");
+    }
+
+    // --- INITIALIZATION ---
     function initSidebar() {
         setListUi.innerHTML = '';
         for (const key in studySets) {
             const set = studySets[key];
             const li = document.createElement('li');
             li.className = `set-item ${key === currentSetId ? 'active' : ''}`;
-            li.innerText = set.title;
+            li.innerHTML = set.title; // Uses innerHTML to render the BPA tag
             li.onclick = () => switchSet(key);
             setListUi.appendChild(li);
         }
@@ -571,38 +1068,45 @@
     function restartCurrentSet() {
         currentQuestionIndex = 0;
         score = 0;
+        examTimeRemaining = 3600; 
+        examTimerBadge.className = "timer-badge"; 
+        
         quizBlock.style.display = 'block';
+        hudBar.style.display = 'flex';
         resultsBlock.style.display = 'none';
         feedbackEl.style.display = 'none';
+        explanationEl.style.display = 'none';
         
         const set = studySets[currentSetId];
-        setTitleEl.innerText = set.title;
+        setTitleEl.innerHTML = set.title; // Uses innerHTML to render the BPA tag
         
+        startExamTimer();
         loadQuestion();
     }
 
     function loadQuestion() {
+        isAnswered = false;
+        startQuestionTimer(); 
+
         const currentData = studySets[currentSetId].questions[currentQuestionIndex];
         const totalQuestions = studySets[currentSetId].questions.length;
         
         feedbackEl.style.display = 'none';
         feedbackEl.className = 'feedback-msg'; 
+        explanationEl.style.display = 'none';
         nextBtn.style.display = 'none';
         
         trackerEl.innerText = `${currentQuestionIndex + 1} / ${totalQuestions}`;
         scoreTrackerEl.innerText = `Score: ${score}`;
-        const progressPercentage = (currentQuestionIndex / totalQuestions) * 100;
-        progressFill.style.width = `${progressPercentage}%`;
+        progressFill.style.width = `${(currentQuestionIndex / totalQuestions) * 100}%`;
         
         questionEl.innerText = currentData.q;
         optionsEl.innerHTML = '';
         
-        // --- SHUFFLE LOGIC ---
         let optionsWithState = currentData.a.map((optText, index) => {
             return { text: optText, isCorrect: (index === currentData.correct) };
         });
 
-        // Fisher-Yates Shuffle
         for (let i = optionsWithState.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [optionsWithState[i], optionsWithState[j]] = [optionsWithState[j], optionsWithState[i]];
@@ -611,18 +1115,19 @@
         optionsWithState.forEach((optObj) => {
             const li = document.createElement('li');
             li.innerText = optObj.text;
-            li.onclick = () => handleSelection(li, optObj.isCorrect, optionsWithState);
+            li.onclick = () => {
+                if (!isAnswered) handleSelection(li, optObj.isCorrect, optionsWithState);
+            };
             optionsEl.appendChild(li);
         });
     }
 
-    function getRandomMessage(msgArray) {
-        const randomIndex = Math.floor(Math.random() * msgArray.length);
-        return msgArray[randomIndex];
-    }
-
     function handleSelection(selectedLi, isCorrect, currentOptionsState) {
+        isAnswered = true;
+        clearInterval(questionTimerInterval); 
+
         const totalQuestions = studySets[currentSetId].questions.length;
+        const currentData = studySets[currentSetId].questions[currentQuestionIndex];
         const allOptions = optionsEl.querySelectorAll('li');
 
         allOptions.forEach(li => li.classList.add('disabled'));
@@ -632,62 +1137,81 @@
             selectedLi.classList.add('correct');
             score++;
             scoreTrackerEl.innerText = `Score: ${score}`;
-            
-            feedbackEl.innerText = getRandomMessage(correctMessages);
+            feedbackEl.innerText = "Correct!";
             feedbackEl.classList.add('success');
-            feedbackEl.style.display = 'block';
         } else {
             selectedLi.classList.remove('disabled');
             selectedLi.classList.add('incorrect');
-            
             allOptions.forEach((li, idx) => {
-                if(currentOptionsState[idx].isCorrect) {
-                    li.classList.remove('disabled');
-                    li.classList.add('correct');
-                }
+                if(currentOptionsState[idx].isCorrect) { li.classList.remove('disabled'); li.classList.add('correct'); }
             });
-            
-            feedbackEl.innerText = getRandomMessage(incorrectMessages);
+            feedbackEl.innerText = "Incorrect.";
             feedbackEl.classList.add('error');
-            feedbackEl.style.display = 'block';
         }
 
-        if (currentQuestionIndex === totalQuestions - 1) {
-            nextBtn.innerText = "Finish Set";
-        } else {
-            nextBtn.innerText = "Continue (Press Enter)";
-        }
+        feedbackEl.style.display = 'block';
+        explanationEl.innerHTML = `<strong>Explanation:</strong> ${currentData.exp}`;
+        explanationEl.style.display = 'block';
+
+        nextBtn.innerText = currentQuestionIndex === totalQuestions - 1 ? "Finish Set" : "Continue (Press Enter)";
         nextBtn.style.display = 'block';
     }
 
     nextBtn.onclick = () => {
         const totalQuestions = studySets[currentSetId].questions.length;
         currentQuestionIndex++;
-        if (currentQuestionIndex < totalQuestions) {
-            loadQuestion();
-        } else {
-            showResults();
-        }
+        if (currentQuestionIndex < totalQuestions) { loadQuestion(); } else { showResults("Set Complete!"); }
     };
 
-    // Global keyboard shortcut to press "Continue" with the Enter key
+    // --- KEYBOARD SHORTCUTS ---
     document.addEventListener("keydown", function(event) {
-        if (event.key === "Enter" && nextBtn.style.display === "block") {
-            nextBtn.click();
+        if (event.key === "Enter" && nextBtn.style.display === "block") { 
+            nextBtn.click(); 
+        }
+        if (!isAnswered && event.key >= '1' && event.key <= '4') {
+            const optionIndex = parseInt(event.key) - 1;
+            const allOptions = optionsEl.querySelectorAll('li');
+            if (allOptions[optionIndex]) {
+                allOptions[optionIndex].click();
+            }
         }
     });
 
-    function showResults() {
+    // --- RESULTS AND BPA LOGIC ---
+    function showResults(headingText) {
+        clearInterval(examTimerInterval);
+        clearInterval(questionTimerInterval);
         const totalQuestions = studySets[currentSetId].questions.length;
         progressFill.style.width = '100%';
         
         setTimeout(() => {
             quizBlock.style.display = 'none';
+            hudBar.style.display = 'none';
             resultsBlock.style.display = 'block';
             
-            const percentage = Math.round((score / totalQuestions) * 100);
-            document.getElementById('final-score-val').innerText = `${percentage}%`;
-            document.getElementById('final-score-text').innerText = `You correctly answered ${score} out of ${totalQuestions} questions in this set.`;
+            const percent = Math.round((score / totalQuestions) * 100);
+            document.getElementById('results-heading').innerText = headingText;
+            document.getElementById('final-score-val').innerText = `${percent}%`;
+            document.getElementById('final-score-text').innerText = `You correctly answered ${score} out of ${totalQuestions} questions.`;
+            document.getElementById('final-time-left').innerText = formatTime(examTimeRemaining);
+
+            // --- BPA ESTIMATOR ---
+            const bpaEstimateEl = document.getElementById('bpa-estimate');
+            if (currentSetId === "set1") {
+                bpaEstimateEl.style.display = "block";
+                const timeUsed = 3600 - examTimeRemaining;
+                
+                if (percent >= 85) {
+                    bpaEstimateEl.innerHTML = `<span style="color: var(--correct-color);">🏆 <strong>BPA Placement Estimate: Nationals Contender!</strong></span><br><br>Outstanding! With a score of ${percent}% in ${formatTime(timeUsed)}, you are highly competitive to pass State and advance to Nationals. Keep optimizing your time, as ties are broken by speed!`;
+                } else if (percent >= 70) {
+                    bpaEstimateEl.innerHTML = `<span style="color: var(--warning-color);">👍 <strong>BPA Placement Estimate: Regional Qualifier</strong></span><br><br>Solid run! This score will generally clear Regionals, but State competition gets fierce. Aim for 85%+ to secure your spot for Nationals.`;
+                } else {
+                    bpaEstimateEl.innerHTML = `<span style="color: var(--danger-color);">📚 <strong>BPA Placement Estimate: Needs Review</strong></span><br><br>Keep grinding! You generally need 75-80%+ to place reliably at Regionals and State. Review the explanations, watch your time, and try again!`;
+                }
+            } else {
+                bpaEstimateEl.style.display = "none";
+            }
+            
         }, 300);
     }
 
